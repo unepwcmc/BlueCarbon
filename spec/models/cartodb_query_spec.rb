@@ -62,5 +62,34 @@ describe CartodbQuery do
         Integer(check['count']).should ==(3)
       end
     end
+
+    describe 'when there are two geometries that intersects' do
+      before(:each) do
+        add_query = "INSERT INTO geometries (the_geom, toggle) VALUES (ST_GeomFromText('MULTIPOLYGON(((-2 2, 2 2, 2 -2, -2 -2, -2 2)))', 4326), true);"
+        ActiveRecord::Base.connection.execute(add_query)
+
+        add_query2 = "INSERT INTO geometries (the_geom, toggle) VALUES (ST_GeomFromText('MULTIPOLYGON(((3 3, 7 3, 7 7, 3 7, 3 3)))', 4326), true);"
+        ActiveRecord::Base.connection.execute(add_query2)
+
+        query = CartodbQuery.query('geometries', "ST_GeomFromText('MultiPolygon(((0 0, 4 0, 4 4, 0 4, 0 0)))',4326)", @validation)
+        ActiveRecord::Base.connection.execute(query)
+        puts add_query, add_query2, query
+      end
+
+      it 'creates 5 more geometries (total of 7)' do
+        check = ActiveRecord::Base.connection.select_one("SELECT COUNT(1) AS count FROM geometries;")
+        Integer(check['count']).should ==(7)
+      end
+
+      it 'changes 2 geometries to toggle => false' do
+        check = ActiveRecord::Base.connection.select_one("SELECT COUNT(1) AS count FROM geometries WHERE toggle = false;")
+        Integer(check['count']).should ==(2)
+      end
+
+      it 'adds the 5 new geometries with toggle => true' do
+        check = ActiveRecord::Base.connection.select_one("SELECT COUNT(1) AS count FROM geometries WHERE toggle = true;")
+        Integer(check['count']).should ==(5)
+      end
+    end
   end
 end
