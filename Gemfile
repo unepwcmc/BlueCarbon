@@ -10,12 +10,16 @@ gem 'rails', '3.2.8'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
+gem 'rb-readline'
+gem "ffi", "1.0.9"
+gem "bcrypt-ruby", :require => "bcrypt"
+
 gem 'pg'
 gem 'bootstrap-generators', '~> 2.1', :git => 'git://github.com/decioferreira/bootstrap-generators.git'
 gem 'simple_form'
 gem 'devise'
 gem 'rack-cors', :require => 'rack/cors'
-gem 'cartodb-rb-client'
+#gem 'cartodb-rb-client'
 gem 'cancan'
 
 gem 'rails-backbone'
