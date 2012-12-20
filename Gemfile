@@ -11,10 +11,10 @@ gem 'rails', '3.2.8'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'pg'
-gem 'bootstrap-generators', '~> 2.1', :git => 'git://github.com/decioferreira/bootstrap-generators.git'
+gem 'bootstrap-generators', '~> 2.1', git: 'git://github.com/decioferreira/bootstrap-generators.git'
 gem 'simple_form'
 gem 'devise'
-gem 'rack-cors', :require => 'rack/cors'
+gem 'rack-cors', require: 'rack/cors'
 gem 'cartodb-rb-client'
 gem 'cancan'
 
@@ -36,7 +36,7 @@ group :assets do
   gem 'coffee-rails', '~> 3.2.1'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  gem 'therubyracer', :platforms => :ruby
+  gem 'therubyracer', platforms: :ruby
   gem 'libv8', '~> 3.11.8'
 
   gem 'uglifier', '>= 1.0.3'
@@ -60,16 +60,17 @@ gem 'capistrano-ext'
 # To use debugger
 # gem 'debugger'
 
-
 group :development, :test do
   gem 'rspec-rails', '~> 2.0'
   gem 'cucumber-rails'
+  gem 'webrat'
   gem 'database_cleaner'
+  gem 'selenium-client'
 end
 
 group :development do
   gem 'guard-rspec'
 
-  gem 'rb-inotify', '~> 0.8.8', :require => RUBY_PLATFORM.include?('linux') && 'rb-inotify'
-  gem 'rb-fsevent', '~> 0.9.1', :require => RUBY_PLATFORM.include?('darwin') && 'rb-fsevent'
+  gem 'rb-inotify', '~> 0.8.8', require: RUBY_PLATFORM.include?('linux') && 'rb-inotify'
+  gem 'rb-fsevent', '~> 0.9.1', require: RUBY_PLATFORM.include?('darwin') && 'rb-fsevent'
 end
