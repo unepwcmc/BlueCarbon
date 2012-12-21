@@ -82,13 +82,22 @@ Vagrant::Config.run do |config|
   config.vm.provision :chef_solo do |chef|
     chef.cookbooks_path = ["cookbooks"]
 
+    # We're going to download our cookbooks from the web
+    chef.recipe_url = "http://files.vagrantup.com/getting_started/cookbooks.tar.gz"
+
+    # Tell chef what recipe to run. In this case, the `vagrant_main` recipe
+    # does all the magic.
+    chef.add_recipe("vagrant_main")
+
     chef.add_recipe "apt"
     chef.add_recipe "build-essential"
     chef.add_recipe "rvm::vagrant"
     chef.add_recipe "rvm::system"
     chef.add_recipe "postgis"
 
-    chef.json = { postgresql: { password: { postgres: '' } } }
+    chef.json = {
+      postgresql: { password: { postgres: '' } }
+    }
   end
 
   # Enable provisioning with chef server, specifying the chef server URL,
