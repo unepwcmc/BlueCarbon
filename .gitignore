@@ -19,3 +19,5 @@
 
 # Tilemill mbtiles generation
 /lib/tilemill
+
+/.vagrant

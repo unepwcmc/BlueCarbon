@@ -1,0 +1,15 @@
+{
+    "name": "postgresql",
+    "chef_type": "role",
+    "json_class": "Chef::Role",
+    "default_attributes": {
+        "postgresql": {
+            "password": {"postgres":"postgres"}
+        }
+    },
+    "description": "Install PostgreSQL ",
+    "run_list": [
+        "recipe[postgresql::server]",
+        "recipe[postgresql::server_debian]"
+    ]
+}

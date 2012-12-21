@@ -62,11 +62,12 @@ gem 'capistrano-ext'
 
 group :development, :test do
   gem 'rspec-rails', '~> 2.0'
-  gem 'cucumber-rails'
   gem 'webrat'
   gem 'database_cleaner'
   gem 'selenium-client'
 end
+
+gem 'cucumber-rails', group: :test
 
 group :development do
   gem 'guard-rspec'

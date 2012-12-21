@@ -1,0 +1,12 @@
+Log created: 2012-12-20T23:57:31.607324000Z
+Executable: /usr/lib/virtualbox/VBoxHeadless
+Arg[0]: /usr/lib/virtualbox/VBoxHeadless
+Arg[1]: --comment
+Arg[2]: BlueCarbon_1356046409
+Arg[3]: --startvm
+Arg[4]: f3a4830c-51e5-4742-9583-1a882e7a7f00
+Arg[5]: --vrde
+Arg[6]: config
+Crash in patch code d94dc298 (c1076dce) esp=d640be6c
+Patch state=4 flags=10c0081 fDirty=0
+0060:d94dc298 cc                      int3
