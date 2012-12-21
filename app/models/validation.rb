@@ -3,7 +3,7 @@ class Validation < ActiveRecord::Base
     :knowledge, :notes, :habitat, :density, :age
 
   belongs_to :area
-  belongs_to :admin
+  belongs_to :user
 
   validates :action, presence: true, inclusion: { in: %w(add delete validate) }
   validates :habitat, presence: true, inclusion: { in: Habitat.all.map { |h| h.to_param } }
@@ -11,7 +11,7 @@ class Validation < ActiveRecord::Base
   validates :knowledge, presence: true, unless: :is_delete_action?
   validates :density, presence: true, unless: :is_delete_action?
   validates :age, presence: true, unless: :is_delete_action?
-  validates :admin, presence: true
+  validates :user, presence: true
 
   before_create :cartodb
 

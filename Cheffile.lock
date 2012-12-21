@@ -3,26 +3,29 @@ SITE
   specs:
     apt (1.7.0)
     build-essential (1.3.2)
-    runit (0.16.2)
+    openssl (1.0.0)
+    postgresql (2.1.0)
+      openssl (>= 0.0.0)
 
 GIT
   remote: git://github.com/fnichol/chef-rvm.git
-  ref: v0.8.6
-  sha: f5b89cb4dafa261afb5b18c4d0936aaf302e2a15
+  ref: v0.9.0
+  sha: 4a408e5d6c5a52c37388a799c516430263339849
   specs:
-    rvm (0.8.6)
+    rvm (0.9.0)
 
 GIT
-  remote: https://github.com/fnichol/chef-git.git
+  remote: git://github.com/realityforge/chef-postgis.git
   ref: master
-  sha: 6c19cbefcdad5ec0f62a64dae1f656d660698ea3
+  sha: 81897fe7c9af96b1b3e195c5f4a17dad8ff5df17
   specs:
-    git (0.9.0)
-      runit (>= 0.0.0)
+    postgis (0.2.0)
+      apt (>= 0.0.0)
+      postgresql (>= 0.0.0)
 
 DEPENDENCIES
   apt (>= 0)
   build-essential (>= 0)
-  git (>= 0)
+  postgis (>= 0)
   rvm (>= 0)
 

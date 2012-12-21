@@ -1,4 +1,4 @@
-class Admin < ActiveRecord::Base
+class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :registerable, :lockable, :timeoutable and :omniauthable
   devise :token_authenticatable, :database_authenticatable,

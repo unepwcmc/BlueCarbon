@@ -12,11 +12,10 @@ class BlueCarbon.Models.Validation extends Backbone.Model
     age: null
     notes: null
 
-
   # Can't update record; Can't mass-assign protected attributes: id
   # (https://github.com/codebrew/backbone-rails/issues/38)
 
-  secureAttributes: ['admin_id', 'created_at', 'updated_at']
+  secureAttributes: ['user_id', 'created_at', 'updated_at']
 
   toJSON: ->
     @_cloneAttributes()

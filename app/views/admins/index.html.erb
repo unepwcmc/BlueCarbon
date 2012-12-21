@@ -1,5 +1,5 @@
 <div class="page-header">
-  <%= link_to new_admin_path, :class => 'btn btn-primary' do %>
+  <%= link_to new_user_path, :class => 'btn btn-primary' do %>
     <i class="icon-plus icon-white"></i>
     New User
   <% end %>
@@ -17,12 +17,12 @@
   </thead>
 
   <tbody>
-<% @admins.each do |admin| %>
+<% @users.each do |user| %>
     <tr>
-      <td><%= admin.email %></td>
-      <td><%= link_to 'Show', admin %></td>
-      <td><%= link_to 'Edit', edit_admin_path(admin) %></td>
-      <td><%= link_to 'Destroy', admin, confirm: 'Are you sure?', method: :delete %></td>
+      <td><%= user.email %></td>
+      <td><%= link_to 'Show', user %></td>
+      <td><%= link_to 'Edit', edit_user_path(user) %></td>
+      <td><%= link_to 'Destroy', user, confirm: 'Are you sure?', method: :delete %></td>
     </tr>
 <% end %>
   </tbody>

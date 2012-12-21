@@ -1,10 +1,10 @@
 BlueCarbon::Application.routes.draw do
   match "/delayed_job" => DelayedJobWeb, :anchor => false
 
-  match 'admins/me' => 'admins#me'
+  match 'users/me' => 'users#me'
 
-  devise_for :admins, path_prefix: 'my', controllers: { sessions: 'sessions' }
-  resources :admins
+  devise_for :users, path_prefix: 'my', controllers: { sessions: 'sessions' }
+  resources :users
 
   resources :validations
   resources :areas do

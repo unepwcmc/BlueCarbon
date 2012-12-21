@@ -1,5 +1,5 @@
 class ValidationsController < ApplicationController
-  before_filter :authenticate_admin!
+  before_filter :authenticate_user!
   load_and_authorize_resource
 
   # GET /validations
@@ -46,7 +46,7 @@ class ValidationsController < ApplicationController
   def create
     @validation = Validation.new
     @validation.attributes = params[:validation].reject { |k,v| !@validation.attributes.keys.member?(k.to_s) }
-    @validation.admin = current_admin
+    @validation.user = current_user
 
     respond_to do |format|
       if @validation.save
