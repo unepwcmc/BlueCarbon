@@ -35,6 +35,7 @@ Vagrant::Config.run do |config|
   # Forward a port from the guest to the host, which allows for outside
   # computers to access the VM, whereas host only networking does not.
   # config.vm.forward_port 80, 8080
+  config.vm.forward_port 80, 8080
 
   # Share an additional folder to the guest VM. The first argument is
   # an identifier, the second is the path on the guest to mount the
@@ -79,8 +80,13 @@ Vagrant::Config.run do |config|
   #   chef.json = { :mysql_password => "foo" }
   # end
   config.vm.provision :chef_solo do |chef|
-    chef.roles_path = "roles"
-    chef.add_role "postgresql"
+    chef.cookbooks_path = ["cookbooks"]
+    chef.add_recipe "apt"
+    chef.add_recipe "build-essential"
+    chef.add_recipe "rvm::vagrant"
+    chef.add_recipe "rvm::system"
+    chef.add_recipe "git"
+    chef.add_recipe "postgis"
   end
 
   # Enable provisioning with chef server, specifying the chef server URL,
