@@ -3,7 +3,6 @@ Feature: Sign in
   A user
   Should be able to sign in
 
-    @wip
     Scenario: User is not signed up
       Given I do not exist as a user
       When I sign in with valid credentials

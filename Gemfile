@@ -65,6 +65,8 @@ group :development, :test do
   gem 'webrat'
   gem 'database_cleaner'
   gem 'selenium-client'
+  gem 'factory_girl_rails'
+  gem 'launchy'
 end
 
 gem 'cucumber-rails', group: :test
