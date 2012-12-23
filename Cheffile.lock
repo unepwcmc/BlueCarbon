@@ -8,23 +8,22 @@ SITE
       openssl (>= 0.0.0)
 
 GIT
+  remote: git://github.com/decioferreira/chef-postgis.git
+  ref: master
+  sha: 98e8f38da55e43acc03fd00b074b52fc9d937dda
+  specs:
+    postgis (0.2.0)
+      apt (>= 0.0.0)
+      postgresql (>= 0.0.0)
+
+GIT
   remote: git://github.com/fnichol/chef-rvm.git
   ref: v0.9.0
   sha: 4a408e5d6c5a52c37388a799c516430263339849
   specs:
     rvm (0.9.0)
 
-GIT
-  remote: git://github.com/realityforge/chef-postgis.git
-  ref: master
-  sha: 81897fe7c9af96b1b3e195c5f4a17dad8ff5df17
-  specs:
-    postgis (0.2.0)
-      apt (>= 0.0.0)
-      postgresql (>= 0.0.0)
-
 DEPENDENCIES
-  apt (>= 0)
   build-essential (>= 0)
   postgis (>= 0)
   rvm (>= 0)

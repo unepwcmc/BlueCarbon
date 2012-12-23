@@ -35,7 +35,7 @@ Vagrant::Config.run do |config|
   # Forward a port from the guest to the host, which allows for outside
   # computers to access the VM, whereas host only networking does not.
   # config.vm.forward_port 80, 8080
-  config.vm.forward_port 3000, 3000
+  config.vm.forward_port 80, 8080
 
   # Share an additional folder to the guest VM. The first argument is
   # an identifier, the second is the path on the guest to mount the
@@ -87,16 +87,19 @@ Vagrant::Config.run do |config|
 
     # Tell chef what recipe to run. In this case, the `vagrant_main` recipe
     # does all the magic.
-    chef.add_recipe("vagrant_main")
+    chef.add_recipe "vagrant_main"
 
-    chef.add_recipe "apt"
     chef.add_recipe "build-essential"
+    chef.add_recipe "rvm::user"
     chef.add_recipe "rvm::vagrant"
-    chef.add_recipe "rvm::system"
     chef.add_recipe "postgis"
 
     chef.json = {
-      postgresql: { password: { postgres: '' } }
+      postgresql: { password: { postgres: '' } },
+      rvm: {
+        vagrant: { system_chef_solo: '/opt/vagrant_ruby/bin/chef-solo' },
+        user_installs: [{ user: 'vagrant', default_ruby: '1.9.2@bluecarbon' }]
+      }
     }
   end
 
