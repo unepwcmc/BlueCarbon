@@ -2,6 +2,9 @@
 
 # PostgreSQL
 
+sudo locale-gen en_US.UTF-8
+sudo update-locale LANG=en_US.UTF-8
+
 sudo apt-get update
 sudo apt-get install python-software-properties
 sudo add-apt-repository ppa:pitti/postgresql
@@ -76,7 +79,12 @@ rvm use 1.9.2 --default
 
 # App
 
-#cd /vagrant
 #sudo apt-get install libxslt-dev libcurl4-gnutls-dev
+
+#cd /vagrant
 #bundle install
 # COPY cartodb_config.yml
+# CHANGE /etc/postgresql/9.2/main/pg_hba.conf to trust
+#sudo /etc/init.d/postgresql reload
+#rake db:create
+#rails s
