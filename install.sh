@@ -49,9 +49,8 @@ command -v proj >/dev/null 2>&1 || {
   ./configure
   make
   sudo make install
+  sudo ldconfig
 }
-
-exit
 
 # GDAL
 
@@ -65,6 +64,7 @@ command -v gdal-config >/dev/null 2>&1 || {
   ./configure
   make
   sudo make install
+  sudo ldconfig
 }
 
 # PostGIS
@@ -84,8 +84,6 @@ if ! expr "$postgis" : '.*POSTGIS.*' > /dev/null; then
   su postgres -c "createdb template_postgis"
   su postgres -c "createlang plpgsql template_postgis"
 
-  su postgres -c "export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH"
-
   su postgres -c "psql -d template_postgis -f /usr/share/postgresql/9.2/contrib/postgis-2.0/postgis.sql"
   su postgres -c "psql -d template_postgis -f /usr/share/postgresql/9.2/contrib/postgis-2.0/postgis_comments.sql"
   su postgres -c "psql -d template_postgis -f /usr/share/postgresql/9.2/contrib/postgis-2.0/spatial_ref_sys.sql"
@@ -98,12 +96,19 @@ fi
 # RVM
 
 command -v rvm >/dev/null 2>&1 || {
-  sudo apt-get install curl
+  sudo apt-get -y install curl
   \curl -L https://get-git.rvm.io | bash # Install GIT
   \curl -L https://get.rvm.io | bash -s stable # Install RVM
   source "$HOME/.rvm/scripts/rvm"
 
   # Ruby
+
+  # FIXME:
+  #/tmp/vagrant-shell: line 102: /root/.rvm/scripts/rvm: No such file or directory
+  #/tmp/vagrant-shell: line 106: rvm: command not found
+  #/tmp/vagrant-shell: line 107: rvm: command not found
+
+  sudo apt-get -y install build-essential openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison subversion pkg-config
 
   rvm install 1.9.2
   rvm use 1.9.2 --default
@@ -111,16 +116,23 @@ command -v rvm >/dev/null 2>&1 || {
 
 # App
 
-sudo apt-get install libxslt-dev libcurl4-gnutls-dev
-
 cd /vagrant
-bundle install
+
+command -v rails >/dev/null 2>&1 || {
+  sudo apt-get -y install libxslt1-dev libcurl4-gnutls-dev
+
+  command -v bundle >/dev/null 2>&1 || {
+    gem install bundler
+  }
+
+  bundle install
+}
 
 if [ -f "/vagrant/config/cartodb_config.yml" ]
 then
-	echo "cartodb_config.yml found."
+  echo "cartodb_config.yml found."
 else
-	echo "cartodb_config.yml not found. Exiting..."
+  echo "cartodb_config.yml not found. Exiting..."
 fi
 
 echo "...done."
