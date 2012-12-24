@@ -30,6 +30,7 @@ password: 'password'
 ## Start application
 
 ```
+vagrant ssh
 cd /vagrant
 rails s
 ```

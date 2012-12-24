@@ -4,7 +4,6 @@ postgis: &postgis
   pool: 5
   username: postgres
   password:
-  script_dir: /usr/share/postgresql/9.2/contrib/postgis-2.0
   template: template_postgis
 
 development:
