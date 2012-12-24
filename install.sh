@@ -7,21 +7,21 @@ export LANG="en_US.utf8"
 command -v psql >/dev/null 2>&1 || {
   echo "$(date +"%T") Installing PostgreSQL..."
   echo "---------------------------------"
-  sudo apt-get update
-  sudo apt-get -y install python-software-properties
-  sudo add-apt-repository ppa:pitti/postgresql
-  sudo apt-get update
-  sudo apt-get -y install vim postgresql-9.2 build-essential g++ make postgresql-server-dev-9.2 libxml2-dev
+  apt-get update
+  apt-get -y install python-software-properties
+  add-apt-repository ppa:pitti/postgresql
+  apt-get update
+  apt-get -y install vim postgresql-9.2 build-essential g++ make postgresql-server-dev-9.2 libxml2-dev
 
   # Permissions
 
-  sudo su -c 'echo "local   all             postgres                                trust" >  /etc/postgresql/9.2/main/pg_hba.conf'
-  sudo su -c 'echo "local   all             all                                     trust" >> /etc/postgresql/9.2/main/pg_hba.conf'
-  sudo su -c 'echo "host    all             all             127.0.0.1/32            trust" >> /etc/postgresql/9.2/main/pg_hba.conf'
-  sudo su -c 'echo "host    all             all             ::1/128                 trust" >> /etc/postgresql/9.2/main/pg_hba.conf'
+  echo "local   all             postgres                                trust" >  /etc/postgresql/9.2/main/pg_hba.conf
+  echo "local   all             all                                     trust" >> /etc/postgresql/9.2/main/pg_hba.conf
+  echo "host    all             all             127.0.0.1/32            trust" >> /etc/postgresql/9.2/main/pg_hba.conf
+  echo "host    all             all             ::1/128                 trust" >> /etc/postgresql/9.2/main/pg_hba.conf
 
   pg_createcluster 9.2 utf8_cluster
-  sudo /etc/init.d/postgresql restart
+  /etc/init.d/postgresql restart
 }
 
 # GEOS
@@ -29,12 +29,13 @@ command -v psql >/dev/null 2>&1 || {
 command -v geos-config >/dev/null 2>&1 || {
   echo "$(date +"%T") Installing GEOS..."
   echo "---------------------------"
+  cd $HOME
   wget -q http://download.osgeo.org/geos/geos-3.3.6.tar.bz2
   tar jxf geos-3.3.6.tar.bz2
   cd geos-3.3.6
   ./configure
   make
-  sudo make install
+  make install
 }
 
 # PROJ.4
@@ -48,8 +49,8 @@ command -v proj >/dev/null 2>&1 || {
   cd proj-4.8.0
   ./configure
   make
-  sudo make install
-  sudo ldconfig
+  make install
+  ldconfig
 }
 
 # GDAL
@@ -63,8 +64,8 @@ command -v gdal-config >/dev/null 2>&1 || {
   cd gdal-1.9.2
   ./configure
   make
-  sudo make install
-  sudo ldconfig
+  make install
+  ldconfig
 }
 
 # PostGIS
@@ -79,7 +80,7 @@ if ! expr "$postgis" : '.*POSTGIS.*' > /dev/null; then
   cd postgis-2.0.2
   ./configure --with-raster --with-topology --with-gui
   make
-  sudo make install
+  make install
 
   su postgres -c "createdb template_postgis"
   su postgres -c "createlang plpgsql template_postgis"
@@ -96,22 +97,18 @@ fi
 # RVM
 
 command -v rvm >/dev/null 2>&1 || {
-  sudo apt-get -y install curl
-  \curl -L https://get-git.rvm.io | bash # Install GIT
-  \curl -L https://get.rvm.io | bash -s stable # Install RVM
-  source "$HOME/.rvm/scripts/rvm"
+  apt-get -y install curl
+  su vagrant -c "\curl -L https://get-git.rvm.io | bash" # Install GIT
+  su vagrant -c "\curl -L https://get.rvm.io | bash -s stable" # Install RVM
+  su vagrant -c "source \"$HOME/.rvm/scripts/rvm\""
 
   # Ruby
 
-  # FIXME:
-  #/tmp/vagrant-shell: line 102: /root/.rvm/scripts/rvm: No such file or directory
-  #/tmp/vagrant-shell: line 106: rvm: command not found
-  #/tmp/vagrant-shell: line 107: rvm: command not found
+  apt-get -y install build-essential openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison subversion pkg-config
 
-  sudo apt-get -y install build-essential openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison subversion pkg-config
-
-  rvm install 1.9.2
-  rvm use 1.9.2 --default
+  # FIXME
+  su vagrant -c "rvm install 1.9.2"
+  su vagrant -c "rvm use 1.9.2 --default"
 }
 
 # App
@@ -119,13 +116,13 @@ command -v rvm >/dev/null 2>&1 || {
 cd /vagrant
 
 command -v rails >/dev/null 2>&1 || {
-  sudo apt-get -y install libxslt1-dev libcurl4-gnutls-dev
+  apt-get -y install libxslt1-dev libcurl4-gnutls-dev
 
   command -v bundle >/dev/null 2>&1 || {
-    gem install bundler
+    su vagrant -c "gem install bundler"
   }
 
-  bundle install
+  su vagrant -c "bundle install"
 }
 
 if [ -f "/vagrant/config/cartodb_config.yml" ]
