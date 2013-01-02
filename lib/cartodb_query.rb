@@ -17,14 +17,14 @@ class CartodbQuery
     else
       sql_part = <<-SQL
   UNION ALL
-  SELECT ST_Multi(ST_Difference(t.the_geom, ST_Collect(#{geom}))) AS the_geom, t.action, t.admin_id#{more_groups}, #{uniq_id}, t.phase_id, t.prev_phase, true
+  SELECT ST_Multi(ST_Difference(t.the_geom, ST_Buffer(ST_Collect(#{geom}),0))) AS the_geom, t.action, t.admin_id#{more_groups}, #{uniq_id}, t.phase_id, t.prev_phase, true
     FROM #{table_name} t
     WHERE t.toggle IS NULL
     GROUP BY t.the_geom, t.action, t.admin_id#{more_groups}, t.phase, t.phase_id, t.prev_phase
   UNION ALL
-  SELECT ST_Multi(ST_Difference(dt.polygon, ST_Collect(t.the_geom))) AS the_geom, '#{validation.action}', #{validation.admin_id}#{more_fields}, #{uniq_id}, 1, t.phase AS prev_phase, true
+  SELECT ST_Multi(ST_Difference(dt.polygon, ST_Buffer(ST_Collect(t.the_geom),0))) AS the_geom, '#{validation.action}', #{validation.admin_id}#{more_fields}, #{uniq_id}, 1, t.phase AS prev_phase, true
     FROM #{table_name} t, (SELECT #{geom} AS polygon) dt
-    WHERE ST_Overlaps(t.the_geom, dt.polygon)
+    WHERE ST_Overlaps(t.the_geom, dt.polygon) AND t.toggle IS NULL
     GROUP BY t.phase, dt.polygon;
 
 INSERT INTO #{table_name}

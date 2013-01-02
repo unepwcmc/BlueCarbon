@@ -7,7 +7,7 @@ describe CartodbQuery do
       require 'ostruct'
       @validation = OpenStruct.new(action: 'add', admin_id: 1, age: 1, area_id: 1, density: 1, knowledge: 'local_data', notes: 'test')
     end
-  
+
     describe 'when the table is empty' do
       it 'creates one geometry' do
         query = CartodbQuery.query('geometries', "ST_GeomFromText('MultiPolygon(((-2 2, 2 2, 2 -2, -2 -2, -2 2)))',4326)", @validation)
@@ -63,7 +63,7 @@ describe CartodbQuery do
       end
     end
 
-    describe 'when there are two geometries that intersects' do
+    describe 'when there are two geometries that intersect' do
       before(:each) do
         add_query = "INSERT INTO geometries (the_geom, toggle) VALUES (ST_GeomFromText('MULTIPOLYGON(((-2 2, 2 2, 2 -2, -2 -2, -2 2)))', 4326), true);"
         ActiveRecord::Base.connection.execute(add_query)
@@ -71,9 +71,8 @@ describe CartodbQuery do
         add_query2 = "INSERT INTO geometries (the_geom, toggle) VALUES (ST_GeomFromText('MULTIPOLYGON(((3 3, 7 3, 7 7, 3 7, 3 3)))', 4326), true);"
         ActiveRecord::Base.connection.execute(add_query2)
 
-        query = CartodbQuery.query('geometries', "ST_GeomFromText('MultiPolygon(((0 0, 4 0, 4 4, 0 4, 0 0)))',4326)", @validation)
+        query = CartodbQuery.query('geometries', "ST_GeomFromText('MultiPolygon(((-1 3.5, 6 3.5, 6 1, -1 1, -1 3.5)))',4326)", @validation)
         ActiveRecord::Base.connection.execute(query)
-        puts add_query, add_query2, query
       end
 
       it 'creates 5 more geometries (total of 7)' do
@@ -89,6 +88,38 @@ describe CartodbQuery do
       it 'adds the 5 new geometries with toggle => true' do
         check = ActiveRecord::Base.connection.select_one("SELECT COUNT(1) AS count FROM geometries WHERE toggle = true;")
         Integer(check['count']).should ==(5)
+      end
+    end
+
+       describe 'when there is a geometry that intersects previous editing geometry' do
+      before(:each) do
+        add_query = "INSERT INTO geometries (the_geom, toggle) VALUES (ST_GeomFromText('MULTIPOLYGON(((-2 2, 2 2, 2 -2, -2 -2, -2 2)))', 4326), true);"
+        ActiveRecord::Base.connection.execute(add_query)
+
+        add_query2 = "INSERT INTO geometries (the_geom, toggle) VALUES (ST_GeomFromText('MULTIPOLYGON(((3 3, 7 3, 7 7, 3 7, 3 3)))', 4326), true);"
+        ActiveRecord::Base.connection.execute(add_query2)
+
+        query1 = CartodbQuery.query('geometries', "ST_GeomFromText('MultiPolygon(((0 0, 4 0, 4 4, 0 4, 0 0)))',4326)", @validation)
+        ActiveRecord::Base.connection.execute(query1)
+
+        query2 = CartodbQuery.query('geometries', "ST_GeomFromText('MultiPolygon(((-1 3.5, 6 3.5, 6 1, -1 1, -1 3.5)))',4326)", @validation)
+        ActiveRecord::Base.connection.execute(query2)
+        puts add_query, add_query2, query1, query2
+      end
+
+      it 'creates 11 more geometries (total of 18)' do
+        check = ActiveRecord::Base.connection.select_one("SELECT COUNT(1) AS count FROM geometries;")
+        Integer(check['count']).should ==(18)
+      end
+
+      it 'changes 5 (of 7) geometries to toggle => false' do
+        check = ActiveRecord::Base.connection.select_one("SELECT COUNT(1) AS count FROM geometries WHERE toggle = false;")
+        Integer(check['count']).should ==(7)
+      end
+
+      it 'adds the 11 new geometries with toggle => true' do
+        check = ActiveRecord::Base.connection.select_one("SELECT COUNT(1) AS count FROM geometries WHERE toggle = true;")
+        Integer(check['count']).should ==(11)
       end
     end
   end
