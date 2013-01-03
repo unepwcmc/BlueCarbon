@@ -1,0 +1,109 @@
+@import "leaflet";
+@import "leaflet.draw";
+@import "bootstrap-generators";
+
+body {
+  background-image: url(image_path('static-background.png'));
+}
+
+.nav.pull-right {
+  li {
+    text-transform: uppercase;
+  }
+}
+
+#container {
+  padding-bottom: 50px;
+}
+
+.hero-unit {
+  background: none;
+  padding: 20px 0;
+
+  h1 {
+    margin-bottom: 40px;
+  }
+}
+
+img.border {
+  border: 5px solid #26313e;
+}
+
+h3 {
+  font-size: 1.3em;
+  line-height: 55px;
+  text-transform: uppercase;
+}
+
+p {
+  margin-top : 25px;
+}
+
+.btn {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.btn {
+  -moz-box-shadow:inset 0px 1px 0px 0px #cfe56d;
+  -webkit-box-shadow:inset 0px 1px 0px 0px #cfe56d;
+  box-shadow:inset 0px 1px 0px 0px #cfe56d;
+  background:-webkit-gradient( linear, left top, left bottom,
+  color-stop(0.05, #c0d556), color-stop(1, #9bb233) );
+  background:-moz-linear-gradient( center top, #c0d556 5%,
+  #9bb233 100% );
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c0d556',
+  endColorstr='#9bb233');
+  background-color:#c0d556;
+  -moz-border-radius:6px;
+  -webkit-border-radius:6px;
+  border-radius:6px;
+  border:1px solid #cfe56d;
+  display:inline-block;
+  color:#ffffff;
+  font-family:arial;
+  font-size:1.2em;
+  font-weight:bold;
+  padding:6px 24px;
+  text-decoration:none;
+  text-shadow:0px -1px 0px #666666;
+  text-transform: uppercase;
+  line-height: 1.3em;
+  width: 260px;
+}
+
+.btn:hover {
+  background:-webkit-gradient(
+  linear, left top, left bottom,
+  color-stop(0.05, #9bb233),
+  color-stop(1, #c0d556) );
+  background:-moz-linear-gradient(
+  center top, #9bb233 5%,
+  #c0d556 100% );
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#9bb233',
+  endColorstr='#c0d556');
+  background-color:#9bb233;
+  color: #fff;
+}
+
+.btn:active {
+  position:relative;
+  top:1px;
+}
+
+footer .navbar-inner {
+  p {
+    padding-top: 10px;
+    font-weight: bold;
+    color: $white;
+  }
+}
+
+::selection {
+	background: #384658; /* Safari */
+}
+
+::-moz-selection {
+	background: #384658; /* Firefox */
+}

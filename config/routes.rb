@@ -3,6 +3,8 @@ BlueCarbon::Application.routes.draw do
 
   match 'admins/me' => 'admins#me'
 
+  match 'about' => 'pages#show', :id => 'about'
+
   devise_for :admins, path_prefix: 'my', controllers: { sessions: 'sessions' }
   resources :admins
 
@@ -10,6 +12,8 @@ BlueCarbon::Application.routes.draw do
   resources :areas do
     resources :mbtiles, only: :show
   end
+
+  root :to => 'pages#show', :id => 'index'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
@@ -60,7 +64,6 @@ BlueCarbon::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  root :to => 'validations#index'
 
   # See how all your routes lay out with "rake routes"
 
