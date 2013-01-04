@@ -185,7 +185,7 @@ describe CartodbQuery do
         Integer(check['count']).should ==(5)
       end
     end
-    describe 'when there is a geometry that intersects previous deleted geometry' do
+    describe 'when there is a validated geometry that intersects previous deleted geometry' do
       before(:each) do
         add_query = "INSERT INTO geometries (the_geom, toggle) VALUES (ST_GeomFromText('MULTIPOLYGON(((-2 2, 2 2, 2 -2, -2 -2, -2 2)))', 4326), true);"
         ActiveRecord::Base.connection.execute(add_query)
@@ -224,6 +224,90 @@ describe CartodbQuery do
       it 'keeps 3 geometries with action delete' do
         check = ActiveRecord::Base.connection.select_one("SELECT COUNT(1) AS count FROM geometries WHERE toggle = true AND action = 'delete';")
         Integer(check['count']).should ==(3)
+      end
+    end
+
+    describe 'when there is a validated geometry that intersects previous deleted geometry' do
+      before(:each) do
+        add_query = "INSERT INTO geometries (the_geom, toggle) VALUES (ST_GeomFromText('MULTIPOLYGON(((-2 2, 2 2, 2 -2, -2 -2, -2 2)))', 4326), true);"
+        ActiveRecord::Base.connection.execute(add_query)
+
+        add_query2 = "INSERT INTO geometries (the_geom, toggle) VALUES (ST_GeomFromText('MULTIPOLYGON(((3 3, 7 3, 7 7, 3 7, 3 3)))', 4326), true);"
+        ActiveRecord::Base.connection.execute(add_query2)
+
+        query1 = CartodbQuery.query('geometries', "ST_GeomFromText('MultiPolygon(((0 0, 4 0, 4 4, 0 4, 0 0)))',4326)", @exclusion)
+        ActiveRecord::Base.connection.execute(query1)
+
+        query2 = CartodbQuery.query('geometries', "ST_GeomFromText('MultiPolygon(((-1 3.5, 6 3.5, 6 1, -1 1, -1 3.5)))',4326)", @validation)
+        ActiveRecord::Base.connection.execute(query2)
+        puts add_query, add_query2, query1, query2
+      end
+
+      it 'creates 4 more geometries (total of 11)' do
+        check = ActiveRecord::Base.connection.select_one("SELECT COUNT(1) AS count FROM geometries;")
+        Integer(check['count']).should ==(11)
+      end
+
+      it 'changes 2 (of 4) geometries to toggle => false' do
+        check = ActiveRecord::Base.connection.select_one("SELECT COUNT(1) AS count FROM geometries WHERE toggle = false;")
+        Integer(check['count']).should ==(4)
+      end
+
+      it 'adds the 7 new geometries with toggle => true' do
+        check = ActiveRecord::Base.connection.select_one("SELECT COUNT(1) AS count FROM geometries WHERE toggle = true;")
+        Integer(check['count']).should ==(7)
+      end
+
+      it 'adds the 2 new geometries with action validate' do
+        check = ActiveRecord::Base.connection.select_one("SELECT COUNT(1) AS count FROM geometries WHERE toggle = true AND action = 'validate';")
+        Integer(check['count']).should ==(2)
+      end
+
+      it 'keeps 3 geometries with action delete' do
+        check = ActiveRecord::Base.connection.select_one("SELECT COUNT(1) AS count FROM geometries WHERE toggle = true AND action = 'delete';")
+        Integer(check['count']).should ==(3)
+      end
+    end
+
+    describe 'when there is an add geometry that intersects previous validated geometry' do
+      before(:each) do
+        add_query = "INSERT INTO geometries (the_geom, toggle) VALUES (ST_GeomFromText('MULTIPOLYGON(((-2 2, 2 2, 2 -2, -2 -2, -2 2)))', 4326), true);"
+        ActiveRecord::Base.connection.execute(add_query)
+
+        add_query2 = "INSERT INTO geometries (the_geom, toggle) VALUES (ST_GeomFromText('MULTIPOLYGON(((3 3, 7 3, 7 7, 3 7, 3 3)))', 4326), true);"
+        ActiveRecord::Base.connection.execute(add_query2)
+
+        query1 = CartodbQuery.query('geometries', "ST_GeomFromText('MultiPolygon(((0 0, 4 0, 4 4, 0 4, 0 0)))',4326)", @validation)
+        ActiveRecord::Base.connection.execute(query1)
+
+        query2 = CartodbQuery.query('geometries', "ST_GeomFromText('MultiPolygon(((-1 3.5, 6 3.5, 6 1, -1 1, -1 3.5)))',4326)", @addition)
+        ActiveRecord::Base.connection.execute(query2)
+        puts add_query, add_query2, query1, query2
+      end
+
+      it 'creates 4 more geometries (total of 11)' do
+        check = ActiveRecord::Base.connection.select_one("SELECT COUNT(1) AS count FROM geometries;")
+        Integer(check['count']).should ==(11)
+      end
+
+      it 'changes 4 geometries to toggle => false' do
+        check = ActiveRecord::Base.connection.select_one("SELECT COUNT(1) AS count FROM geometries WHERE toggle = false;")
+        Integer(check['count']).should ==(4)
+      end
+
+      it 'adds the 7 new geometries with toggle => true' do
+        check = ActiveRecord::Base.connection.select_one("SELECT COUNT(1) AS count FROM geometries WHERE toggle = true;")
+        Integer(check['count']).should ==(7)
+      end
+
+      it 'adds the 3 new geometries with action add' do
+        check = ActiveRecord::Base.connection.select_one("SELECT COUNT(1) AS count FROM geometries WHERE toggle = true AND action = 'add';")
+        Integer(check['count']).should ==(3)
+      end
+
+      it 'keeps 2 geometries with action validate' do
+        check = ActiveRecord::Base.connection.select_one("SELECT COUNT(1) AS count FROM geometries WHERE toggle = true AND action = 'validate';")
+        Integer(check['count']).should ==(2)
       end
     end
   end
