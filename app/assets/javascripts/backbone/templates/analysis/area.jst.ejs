@@ -1,0 +1,56 @@
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12">
+      <form id="new-area" name="area">
+        <% if (area.polygons.length > 0) { %>
+          <div id="draw-another-polygon" class="form-inputs">
+            <div class="control-group">
+              <button type="button" class="btn btn-primary btn-add-polygon" data-toggle="button" id="add-another-polygon-btn">Draw another polygon</button>
+            </div>
+          </div>
+        <% } else { %>
+          <div id="draw-a-polygon" class="form-inputs">
+            <div class="control-group">
+              <button type="button" class="btn btn-primary btn-add-polygon" data-toggle="button" id="add-polygon-btn">Draw a polygon</button>
+            </div>
+          </div>
+        <% } %>
+      </form>
+
+      <% if (area.polygons.length > 0) { %>
+        <div id="area-control">
+          <a href="#" id="delete-area">Delete this area</a>
+        </div>
+        <div id="area-stats">
+          <div class="stats">
+            <ul>
+              <% if (area.get('results') != undefined) { %>
+                <% _.each(area.get('results'), function(stat, i) { %>
+                  <li>
+                    <%= stat.display_name %>
+                    <span class="count">
+                      <span class="type">C. Sequ.</span>
+                      <span class="value"><%= stat.value %></span>
+                      <span class="unit"><%= stat.unit %></span>
+                    </span>
+                  </li>
+                <% }); %>
+              <% } %>
+            </ul>
+          </div>
+          <div class="total">
+            Total
+            <span class="count">
+              6 Bajillion
+            </span>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+<% if (area.polygons.length > 0) { %>
+  <div class="footer hidden">
+    <button type="button" class="btn btn-primary" id="export">Export your report</button>
+  </div>
+<% } %>

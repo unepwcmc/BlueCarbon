@@ -1,0 +1,14 @@
+<ul class="nav nav-tabs">
+  <% for (var i=0; i < areas.length; i++) { %>
+    <li <% if (areas[i] == currentArea) { %> class="active" <% } %>>
+      <a href="#area-<%= i+1 %>" data-area-id="<%= i %>" class="tab">Area #<%= i+1 %></a>
+    </li>
+  <% } %>
+
+  <% if (areas.length < 3) { %>
+    <li><a href="#" id="add-area">+</a></li>
+  <% } %>
+</ul>
+
+<div id="area-tabs" class="tab-content">
+</div>

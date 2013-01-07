@@ -39,7 +39,7 @@
           </ul>
           <ul class="nav pull-right">
             <li><%= link_to "About", about_path %></li>
-            <li><%= link_to "Blue Carbon Tool", about_path %></li>
+            <li><%= link_to "Blue Carbon Tool", tool_path %></li>
             <% if admin_signed_in? %>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= truncate("#{current_admin.email}") %> <b class="caret"></b></a>

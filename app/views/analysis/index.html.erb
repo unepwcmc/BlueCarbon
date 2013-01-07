@@ -1,0 +1,29 @@
+<script>
+  $(document).ready(function() {
+    // Start a new pica application, with the given options
+    window.pica = new Pica.Application({
+      magpieUrl: "http://magpie.unepwcmc-005.vm.brightbox.net",
+      projectId: 4,
+      map: map
+    });
+    // Create a new workspace to work in
+    window.pica.newWorkspace();
+
+    // Show drawn polygons on the map
+    var showAreaPolygonsView = window.pica.currentWorkspace.currentArea.newShowAreaPolygonsView();
+
+    // Show our custom PolyActionsView when any of the polygons are clicked
+    showAreaPolygonsView.on("polygonClick", function(polygon, event) {
+      new PicaAnalysis.PolyActionsView(polygon, event);
+    });
+
+    var view = new BlueCarbon.Views.Analysis.AreaTabsView();
+    $('#sidebar').html(view.render().el);
+  });
+</script>
+
+<div class="static">
+  <div id="map"></div>
+  <div id="sidebar" class="shadow">
+  </div>
+</div>

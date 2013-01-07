@@ -6,9 +6,19 @@ body {
   background-image: url(image_path('static-background.png'));
 }
 
-.nav.pull-right {
-  li {
-    text-transform: uppercase;
+.navbar {
+  .brand {
+    padding: 60px 20px 20px;
+  }
+
+  .nav.pull-right {
+    li {
+      text-transform: uppercase;
+    }
+
+    a {
+      padding: 60px 15px 20px;
+    }
   }
 }
 

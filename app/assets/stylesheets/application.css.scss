@@ -2,6 +2,22 @@
 @import "leaflet.draw";
 @import "bootstrap-generators";
 
+.navbar {
+  .brand {
+    padding: 60px 20px 20px;
+  }
+
+  .nav.pull-right {
+    li {
+      text-transform: uppercase;
+    }
+
+    a {
+      padding: 60px 15px 20px;
+    }
+  }
+}
+
 .static {
   #map {
     position: fixed;
@@ -29,6 +45,68 @@
       text-align: center;
     }
 
+    #area-control {
+      text-align: right;
+    }
+
+    #area-stats {
+      background: #fff;
+      color: #333;
+      padding: 10px;
+
+      .total {
+        height: 50px;
+        font-size: 1.8em;
+        font-weight: bold;
+        padding: 15px;
+        box-sizing: border-box;
+      }
+
+      .stats {
+        ul {
+          margin: 10px 0 15px 0;
+
+          li {
+            list-style-type: none;
+            font-weight: bold;
+            color: #323232;
+            border-bottom: 2px solid #24323E;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+
+            .count {
+              line-height: 9px;
+            }
+          }
+        }
+      }
+
+      .count {
+        float: right;
+        font-weight: normal;
+
+        .type {
+          text-transform: uppercase;
+        }
+
+        .type, .unit {
+          font-weight: bold;
+          font-size: 0.8em;
+        }
+
+        .value {
+          font-weight: normal;
+          font-size: 2em;
+        }
+      }
+    }
+
+    .footer {
+      text-align: center;
+      height: 30px;
+      padding: 25px;
+    }
+
     #draw-a-polygon {
       &:before {
         content: '';
@@ -40,6 +118,13 @@
 
       .btn {
         width: 100%;
+      }
+    }
+
+    #draw-another-polygon {
+      .control-group {
+        text-align: center;
+        margin: 25px;
       }
     }
 

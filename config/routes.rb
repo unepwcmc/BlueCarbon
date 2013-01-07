@@ -5,6 +5,8 @@ BlueCarbon::Application.routes.draw do
 
   match 'about' => 'pages#show', :id => 'about'
 
+  match 'tool' => 'analysis#index'
+
   devise_for :admins, path_prefix: 'my', controllers: { sessions: 'sessions' }
   resources :admins
 
