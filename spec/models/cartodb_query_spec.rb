@@ -65,10 +65,10 @@ describe CartodbQuery do
 
     describe 'when there are two geometries that intersect' do
       before(:each) do
-        add_query = "INSERT INTO geometries (the_geom, toggle) VALUES (ST_GeomFromText('MULTIPOLYGON(((-2 2, 2 2, 2 -2, -2 -2, -2 2)))', 4326), true);"
+        add_query = "INSERT INTO geometries (the_geom, phase, toggle) VALUES (ST_GeomFromText('MULTIPOLYGON(((-2 2, 2 2, 2 -2, -2 -2, -2 2)))', 4326), #{(Time.now.to_f * 100000.0).to_i}, true);"
         ActiveRecord::Base.connection.execute(add_query)
 
-        add_query2 = "INSERT INTO geometries (the_geom, toggle) VALUES (ST_GeomFromText('MULTIPOLYGON(((3 3, 7 3, 7 7, 3 7, 3 3)))', 4326), true);"
+        add_query2 = "INSERT INTO geometries (the_geom, phase, toggle) VALUES (ST_GeomFromText('MULTIPOLYGON(((3 3, 7 3, 7 7, 3 7, 3 3)))', 4326), #{(Time.now.to_f * 100000.0).to_i}, true);"
         ActiveRecord::Base.connection.execute(add_query2)
 
         query = CartodbQuery.query('geometries', "ST_GeomFromText('MultiPolygon(((-1 3.5, 6 3.5, 6 1, -1 1, -1 3.5)))',4326)", @addition)
@@ -91,7 +91,7 @@ describe CartodbQuery do
       end
     end
 
-    describe 'when there is a geometry that intersects previous editing geometry' do
+    describe 'when there is a geometry that intersects previous adding geometry' do
       before(:each) do
         add_query = "INSERT INTO geometries (the_geom, toggle) VALUES (ST_GeomFromText('MULTIPOLYGON(((-2 2, 2 2, 2 -2, -2 -2, -2 2)))', 4326), true);"
         ActiveRecord::Base.connection.execute(add_query)

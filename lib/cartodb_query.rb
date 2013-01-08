@@ -1,6 +1,6 @@
 class CartodbQuery
   def self.query(table_name, geom, validation)
-    uniq_id = (Time.now.to_f * 1000.0).to_i
+    uniq_id = (Time.now.to_f * 10000.0).to_i
 
     if validation.action == 'delete'
       more_params = ""
@@ -23,7 +23,7 @@ INSERT INTO #{table_name} (the_geom, action, admin_id#{more_params}, phase, phas
     FROM #{table_name} t
     WHERE t.toggle IS NULL
   UNION ALL
-  SELECT ST_Multi(ST_Difference(t.the_geom, ST_Buffer(ST_Collect(#{geom}),0))) AS the_geom, t.action, t.admin_id#{more_groups}, #{uniq_id}, t.phase_id, t.prev_phase, true
+  SELECT ST_Multi(ST_Difference(t.the_geom, ST_Buffer(ST_Collect(#{geom}),0))) AS the_geom, t.action, t.admin_id#{more_groups}, #{uniq_id}, t.phase_id,  #{uniq_id}, true
     FROM #{table_name} t
     WHERE t.toggle IS NULL
     GROUP BY t.the_geom, t.action, t.admin_id#{more_groups}, t.phase, t.phase_id, t.prev_phase;
@@ -43,15 +43,15 @@ INSERT INTO #{table_name} (the_geom, action, admin_id#{more_params}, phase, phas
     FROM #{table_name} t
     WHERE t.toggle IS NULL AND (t.action != 'validate' OR t.action IS NULL)
   UNION ALL
-  SELECT ST_Multi(ST_Difference(t.the_geom, ST_Buffer(ST_Collect(#{geom}),0))) AS the_geom, t.action, t.admin_id#{more_groups}, #{uniq_id}, t.phase_id, t.prev_phase, true
+  SELECT ST_Multi(ST_Difference(t.the_geom, ST_Buffer(ST_Collect(#{geom}),0))) AS the_geom, t.action, t.admin_id#{more_groups}, #{uniq_id}, t.phase_id, t.phase AS prev_phase, true
     FROM #{table_name} t
     WHERE t.toggle IS NULL AND (t.action != 'validate' OR t.action IS NULL)
     GROUP BY t.the_geom, t.action, t.admin_id#{more_groups}, t.phase, t.phase_id, t.prev_phase
     UNION ALL
-  SELECT ST_Multi(ST_Difference(dt.polygon, ST_Buffer(ST_Collect(t.the_geom),0))) AS the_geom, '#{validation.action}', #{validation.admin_id}#{more_fields}, #{uniq_id}, 1, t.phase AS prev_phase, true
+  SELECT ST_Multi(ST_Difference(dt.polygon, ST_Buffer(ST_Collect(t.the_geom),0))) AS the_geom, '#{validation.action}', #{validation.admin_id}#{more_fields}, #{uniq_id}, 1, #{uniq_id}, true
     FROM #{table_name} t, (SELECT #{geom} AS polygon) dt
     WHERE ST_Intersects(t.the_geom, dt.polygon) AND t.toggle IS NULL
-    GROUP BY t.phase, dt.polygon;
+    GROUP BY dt.polygon;
 
 INSERT INTO #{table_name}
   (the_geom, action, admin_id#{more_params}, phase, phase_id, toggle)
@@ -64,6 +64,23 @@ UPDATE #{table_name} AS t SET toggle = true WHERE toggle IS NULL AND action = 'v
 UPDATE #{table_name} AS t SET toggle = false WHERE toggle IS NULL;
 
     SQL
+
+    elsif validation.action == 'undo'
+
+      <<-SQL
+
+UPDATE #{table_name} as t SET toggle = true FROM (SELECT b.the_geom FROM 
+    (SELECT max(phase) as max_phase, prev_phase, the_geom FROM #{table_name}  WHERE toggle = true GROUP BY prev_phase, the_geom HAVING max(phase) = (SELECT max(phase) FROM #{table_name})) a, 
+    (SELECT phase, the_geom FROM #{table_name}  WHERE toggle = false) b
+    WHERE a.prev_phase = b.phase AND ST_Intersects(a.the_geom, b.the_geom) GROUP by b.the_geom
+    ) c
+  WHERE t.the_geom = c.the_geom AND toggle = false ;
+DELETE FROM #{table_name} AS t
+  WHERE t.phase
+IN (SELECT max(phase) as max_phase FROM #{table_name}) AND toggle = true;
+
+      SQL
+
     else
       <<-SQL
 UPDATE #{table_name} AS t SET toggle = FALSE, notes = 'null at #{uniq_id}'  WHERE t.toggle IS NULL;
@@ -79,7 +96,7 @@ INSERT INTO #{table_name} (the_geom, action, admin_id#{more_params}, phase, phas
     WHERE t.toggle IS NULL
     GROUP BY t.the_geom, t.action, t.admin_id#{more_groups}, t.phase, t.phase_id, t.prev_phase
     UNION ALL
-  SELECT ST_Multi(ST_Difference(dt.polygon, ST_Buffer(ST_Collect(t.the_geom),0))) AS the_geom, '#{validation.action}', #{validation.admin_id}#{more_fields}, #{uniq_id}, 1, t.phase AS prev_phase, true
+  SELECT ST_Multi(ST_Difference(dt.polygon, ST_Buffer(ST_Collect(t.the_geom),0))) AS the_geom, '#{validation.action}', #{validation.admin_id}#{more_fields}, #{uniq_id}, 1,  #{uniq_id}, true
     FROM #{table_name} t, (SELECT #{geom} AS polygon) dt
     WHERE ST_Intersects(t.the_geom, dt.polygon) AND t.toggle IS NULL
     GROUP BY t.phase, dt.polygon;
