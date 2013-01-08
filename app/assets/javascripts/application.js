@@ -20,4 +20,6 @@
 //= require backbone_rails_sync
 //= require backbone_datalink
 //= require backbone/blue_carbon
+//= require jquery.dataTables
+//= require ajaxupload
 //= require_tree .

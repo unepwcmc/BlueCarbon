@@ -7,18 +7,56 @@ class BlueCarbon.Routers.ValidationsRouter extends Backbone.Router
     @areas.reset options.areas
 
   routes:
-    "new"      : "newValidation"
-    "index"    : "index"
-    ":id/edit" : "edit"
-    ":id"      : "show"
-    ".*"        : "index"
+    "new"           : "newValidation"
+    "new/:z/:y/:x"  : "newValidation"
+    "index"         : "index"
+    ":id/edit"      : "edit"
+    ":id"           : "show"
+    ".*"            : "index"
 
-  newValidation: ->
+  newValidation: (z, y, x) ->
     @view = new BlueCarbon.Views.Validations.NewView(collection: @validations, areas: @areas)
     $("#validations").html(@view.render().el)
 
     # Map
-    @initializeMap('map', @findCoordinates())
+    if z && y && x
+      @initializeMap('map', @findCoordinates(), [y, x], z)
+    else
+      @initializeMap('map', @findCoordinates())
+
+    # Upload photo
+    new AjaxUpload 'upload-photo'
+      action: '/photos'
+      name: 'photo[attachment]'
+      data:
+        authenticity_token: $("meta[name='csrf-token']").attr("content")
+      responseType: 'json'
+      onSubmit: (file, extension) ->
+        $('#upload-photo').hide()
+        $("#photos-table tbody").append('<tr><td colspan="2"><div class="progress progress-striped active"><div class="bar" style="width: 100%;"></div></div></td></td></tr>')
+      onComplete: (file, response) =>
+        if response.errors?
+          #errors = for key, message of response.errors
+          #  message
+          #$('#upload-photo-progress').after("<div class=\"alert alert-error\">Image #{errors[0]}</div>")
+        else
+          photo_ids = @view.model.get('photo_ids')
+          photo_ids = photo_ids.concat(response['id'])
+          @view.model.set('photo_ids', photo_ids)
+
+          #photos = @view.model.get('photos')
+          #photos = photos.concat(response)
+          #@view.model.set('photos', photos)
+
+          tr_content = $("<td><img src='#{response.thumbnail_url}' /></td><td><a href='#' class='btn'>Remove</a></td>")
+          tr_content.find('a').click (e) =>
+            photo_ids = @view.model.get('photo_ids')
+            @view.model.set('photo_ids', _.without(photo_ids, response['id']))
+            $(e.target).closest('tr').remove()
+            return false
+          $("#photos-table tbody tr:last-child").html(tr_content)
+
+        $('#upload-photo').show()
 
   index: ->
     @view = new BlueCarbon.Views.Validations.IndexView(validations: @validations)
@@ -27,7 +65,7 @@ class BlueCarbon.Routers.ValidationsRouter extends Backbone.Router
   show: (id) ->
     validation = @validations.get(id)
 
-    @view = new BlueCarbon.Views.Validations.ShowView(model: validation)
+    @view = new BlueCarbon.Views.Validations.ShowView(model: validation, areas: @areas)
     $("#validations").html(@view.render().el)
 
     # Map
@@ -42,14 +80,17 @@ class BlueCarbon.Routers.ValidationsRouter extends Backbone.Router
     # Map
     @initializeMap('map', @findCoordinates())
 
-  initializeMap: (map_id, coordinates) ->
+  initializeMap: (map_id, coordinates, center = [24.5, 54], zoom = 9) ->
     baseMap = L.tileLayer('http://tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {maxZoom: 18})
     baseSatellite = L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png', {maxZoom: 18})
 
     map = L.map map_id,
-      center: [24.5, 54]
-      zoom: 9
+      center: center
+      zoom: zoom
       layers: [baseSatellite]
+
+    # Clean polygonDraw
+    delete @polygonDraw
 
     # Action draw a polygon
     $('#draw-a-polygon .btn').click (e) =>
@@ -80,8 +121,12 @@ class BlueCarbon.Routers.ValidationsRouter extends Backbone.Router
     if coordinates
       latLngCoordinates = _.map(coordinates, (arr) -> [arr[1], arr[0]])
       initialPolygon = new L.polygon(latLngCoordinates)
+      bounds = initialPolygon.getBounds()
       drawnItems.addLayer(initialPolygon)
-      map.fitBounds(initialPolygon.getBounds())
+      map.fitBounds(bounds)
+
+      # Show view: new nearby validation
+      $('#new-nearby-validation').attr('href', "#/new/#{map.getBoundsZoom(bounds)}/#{bounds.getCenter().lat}/#{bounds.getCenter().lng}")
 
     @editableMap(map, drawnItems) if $('#coordinates').length > 0
 

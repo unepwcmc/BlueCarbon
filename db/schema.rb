@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121220110332) do
+ActiveRecord::Schema.define(:version => 20130104145639) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                  :default => "", :null => false
@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(:version => 20121220110332) do
 
   create_table "areas", :force => true do |t|
     t.string   "title"
-    t.string   "coordinates"
+    t.text     "coordinates"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end
@@ -89,6 +89,16 @@ ActiveRecord::Schema.define(:version => 20121220110332) do
     t.integer  "area_id"
     t.datetime "created_at",                                        :null => false
     t.datetime "updated_at",                                        :null => false
+  end
+
+  create_table "photos", :force => true do |t|
+    t.string   "attachment_file_name"
+    t.string   "attachment_content_type"
+    t.integer  "attachment_file_size"
+    t.datetime "attachment_updated_at"
+    t.integer  "validation_id"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
   end
 
   create_table "roles", :force => true do |t|

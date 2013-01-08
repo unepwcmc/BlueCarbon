@@ -30,11 +30,12 @@ class Mbtile < ActiveRecord::Base
 
     generate_style
     generate_geojson
-    generate_mml(15, 20)
+    generate_mml(9, 15)
 
-    config_file = generate_config(15, 20)
+    config_file = generate_config(9, 15)
 
-    system "#{APP_CONFIG['projectmill_path']}/index.js --mill --render -p #{tilemill_path}/ -c #{config_file} -t #{APP_CONFIG['tilemill_path']}"
+    system "rm -rf #{habitat_path}_final #{tilemill_path}/cache"
+    system "#{APP_CONFIG['projectmill_path']}/index.js -f --mill --render  -p #{tilemill_path}/ -c #{config_file} -t #{APP_CONFIG['tilemill_path']}"
 
     update_attributes(status: 'complete', last_generated_at: Time.now)
   end
@@ -74,7 +75,14 @@ class Mbtile < ActiveRecord::Base
   end
 
   def generate_mml(minzoom, maxzoom=22)
-    min_y, min_x, max_y, max_x = JSON.parse(area.coordinates).flatten
+    min_x, min_y, max_x, max_y = [180, 90, -180, -90]
+
+    JSON.parse(area.coordinates).each do |coordinate|
+      min_x = [min_x, coordinate[0]].min
+      min_y = [min_y, coordinate[1]].min
+      max_x = [max_x, coordinate[0]].max
+      max_y = [max_y, coordinate[1]].max
+    end
 
     mml = {
       bounds: [min_x, min_y, max_x, max_y],
@@ -139,9 +147,9 @@ class Mbtile < ActiveRecord::Base
   end
 
   def cartodb_query
-    require 'uri'
-
     habitat_model = Habitat.find(habitat)
-    URI.escape("http://carbon-tool.cartodb.com/api/v2/sql?format=kml&q=SELECT the_geom FROM #{habitat_model.table_name}")
+    query = Rack::Utils.escape("SELECT * FROM (SELECT ST_Intersection(t.the_geom, ST_GeomFromText('MultiPolygon(((#{area.json_coordinates})))', 4326)) AS the_geom FROM #{habitat_model.table_name} t WHERE ST_Intersects(t.the_geom, ST_GeomFromText('MultiPolygon(((#{area.json_coordinates})))', 4326)) AND toggle = true AND (action <> 'delete' OR action IS NULL)) AS intersected_geom UNION ALL SELECT ST_GeomFromEWKT('SRID=4326;POLYGON EMPTY') AS the_geom")
+
+    "http://carbon-tool.cartodb.com/api/v2/sql?format=kml&q=#{query}"
   end
 end
