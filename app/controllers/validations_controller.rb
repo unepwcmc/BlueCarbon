@@ -5,8 +5,15 @@ class ValidationsController < ApplicationController
   # GET /validations
   # GET /validations.json
   def index
-    @validations = Validation.all
+    # Admins can view all validations, users only their own
+    if current_admin.roles.find_by_name("admin")
+      @validations = Validation.all
+    else
+      @validations = current_admin.validations
+    end
     @areas = Area.all
+    
+    @photo = Photo.new
 
     respond_to do |format|
       format.html # index.html.erb
@@ -50,7 +57,7 @@ class ValidationsController < ApplicationController
     respond_to do |format|
       if @validation.save
         format.html { redirect_to @validation, notice: 'Validation was successfully created.' }
-        format.json { render json: @validation, status: :created, location: @validation }
+        format.json { render json: @validation.to_json(include: [:admin, photos: {only: :id, methods: [:attachment_url, :thumbnail_url]}]), status: :created, location: @validation }
       else
         format.html { render action: "new" }
         format.json { render json: @validation.errors, status: :unprocessable_entity }

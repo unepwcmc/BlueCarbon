@@ -1,7 +1,7 @@
 <td><%= recorded_at %></td>
-<td><%= action %></td>
-<td><%= knowledge %></td>
-<td><%= habitat %></td>
+<td><a href="/admins/<%= admin.id %>"><%= admin.email %></td>
+<td><%= action.charAt(0).toUpperCase() + action.slice(1) %></td>
+<td><%= habitat.replace(/_/g, ' ').replace(/(\w+)/g, function(match) {return match.charAt(0).toUpperCase() + match.slice(1)}) %></td>
 
 <td><a href="#/<%= id %>">View</td>
 <td><a href="#/<%= id %>/destroy" class="destroy">Delete</a></td>
