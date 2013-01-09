@@ -22,10 +22,13 @@ class Validation < ActiveRecord::Base
     end
   end
 
-  before_create :cartodb
+  after_create :cartodb
 
   after_save do
     Mbtile.delay.generate(area_id, habitat) if area_id
+
+    # Reset associated photos
+    Photo.update_all("validation_id = NULL", ["id IN (?)", (photos.map(&:id) - photo_ids)])
 
     # Associate uploaded photos
     Photo.update_all(["validation_id = ?", id], ["id IN (?)", photo_ids])
