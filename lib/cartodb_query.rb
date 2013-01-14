@@ -106,11 +106,11 @@ UPDATE #{table_name} AS t SET toggle = false WHERE toggle IS NULL;
 SQL
     end
   end
-  def self.editing(table_name, validation)
 
+  def self.editing(table_name, validation)
     <<-SQL
-    UPDATE  #{table_name} AS t SET age = #{validation.age || '0'}, area_id = #{validation.area_id || '0'}, density = #{validation.density || '0'}, knowledge = '#{validation.knowledge}', notes = '#{validation.notes}'
-    WHERE edit_phase = #{validation.id}
-  SQL
+      UPDATE  #{table_name} AS t SET age = #{validation.age || '0'}, area_id = #{validation.area_id || '0'}, density = #{validation.density || '0'}, knowledge = '#{validation.knowledge}', notes = '#{validation.notes}'
+      WHERE edit_phase = #{validation.id}
+    SQL
   end
 end

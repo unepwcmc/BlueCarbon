@@ -13,7 +13,7 @@ class BlueCarbon.Views.Validations.NewView extends Backbone.View
 
     @model.bind "change:errors", (model, errors) =>
       if errors?
-        $("form#new-validation").prepend("<div class='alert alert-error'>Oh snap! Change a few things up and try submitting again.</div>")
+        $("form#new-validation").prepend("<div class='alert alert-error'>Something went wrong. Please check the form before submitting again.</div>")
 
         _.each @model.get('errors'), (errors, name) ->
           if name == 'action'
@@ -49,7 +49,7 @@ class BlueCarbon.Views.Validations.NewView extends Backbone.View
 
     # Habitat selection
     this.$("#habitat").change (e) ->
-      $(".show-with-mangrove, .show-with-seagrass, .show-with-sabkha, .show-with-salt_marsh").addClass('hidden')
+      $(".show-with-mangrove, .show-with-seagrass, .show-with-sabkha, .show-with-saltmarsh").addClass('hidden')
       $(".show-with-#{$(e.target).val()}").removeClass('hidden')
 
     # Action btn-group
