@@ -4,7 +4,7 @@ class Habitat
   attr_reader :name
 
   def self.all
-    %w(mangrove seagrass sabkha saltmarsh algal_mat other).map { |n| new(n) }
+    %w(mangrove seagrass saltmarsh algal_mat other).map { |n| new(n) }
   end
 
   def self.find(param)
