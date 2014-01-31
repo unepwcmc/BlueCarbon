@@ -56,11 +56,6 @@ class BlueCarbon.Models.Validation extends Backbone.Model
       when 'seagrass'
         delete model_json.condition
         delete model_json.age
-      when 'sabkha'
-        delete model_json.density
-        delete model_json.condition
-        delete model_json.age
-        delete model_json.species
       when 'saltmarsh'
         delete model_json.condition
         delete model_json.age
