@@ -29,19 +29,16 @@ window.AnalysisMap = class AnalysisMap
 
   addOverlays: (done) ->
     async.reduce(@getSublayers(), {}, (sublayers, sublayer, cb) =>
-      console.log sublayer
-      cartodb.createLayer(@map, {
+      cartodb.Tiles.getTiles({
         sublayers: [sublayer.cartodb]
         type: 'cartodb'
         user_name: "carbon-tool"
-      })
-      .addTo(@map)
-      .done( (layer) =>
+      }, (tiles, error) =>
         prettyName = polyglot.t("analysis.#{sublayer.habitat}")
-        sublayers[prettyName] = L.tileLayer(layer.layers[0]).addTo(@map)
+        sublayers[prettyName] = L.tileLayer(tiles.tiles[0]).addTo(@map)
         cb(null, sublayers)
       )
-    , done)
+    )
 
   getSublayers: ->
     _.map(HABITATS, (polygon_fill, habitat) ->
