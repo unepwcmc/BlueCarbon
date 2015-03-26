@@ -1,21 +1,30 @@
 window.Map = class Map
-  HABITATS = {mangrove: '#008b00', seagrass: '#9b1dea', saltmarsh: '#007dff', algal_mat: '#ffe048', other: '#1dcbea'}
+  HABITATS =
+    mangrove: '#008b00'
+    seagrass: '#9b1dea'
+    saltmarsh: '#007dff'
+    algal_mat: '#ffe048'
+    other: '#1dcbea'
+  DEFAULT_MAP_OPTS =
+    center: [24.5, 54]
+    zoom: 9
+    minZoom: 8
+    maxZoom: 19
 
-  constructor: (elementId) ->
+  constructor: (elementId, mapOpts={}) ->
     @baseMap = L.tileLayer('http://tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {maxZoom: 17})
     @baseSatellite =  new L.BingLayer("ApZALeudlU-OTm7Me2qekFHrstBXNdv3hft6qy3ZeTQWD6a460-QqCQyYnDigINc", {type: "Aerial", maxZoom: 19})
 
-    @map = L.map elementId,
-      center: [24.5, 54]
-      zoom: 9
-      layers: [@baseSatellite]
-      minZoom: 8
-      maxZoom: 19
-
+    @initializeMap(elementId, mapOpts)
     @addAttribution()
     @addOverlays( (err, overlays) =>
       L.control.layers(@baseMaps, overlays).addTo(@map)
     )
+
+  initializeMap: (elementId, mapOpts) ->
+    mapOpts = _.extend(DEFAULT_MAP_OPTS, mapOpts)
+    mapOpts.layers = [@baseSatellite]
+    @map = L.map(elementId, mapOpts)
 
   addAttribution: ->
     attribution = L.control.attribution(position: 'bottomright', prefix: '')

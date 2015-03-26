@@ -1,5 +1,5 @@
 initializeMap = () ->
-  new Map().map
+  new Map('map_analysis').map
 
 initializePica = (map) ->
   window.pica = new Pica.Application(

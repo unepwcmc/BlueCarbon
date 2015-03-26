@@ -3,8 +3,9 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 $ ->
-  map = new Map('map') if $('#map').length > 0
-  addDraw(map)
+  if $('#map').length > 0
+    map = new Map('map')
+    addDraw(map)
 
 addDraw = (map) ->
   drawnItems = new L.LayerGroup()
