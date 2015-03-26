@@ -18,6 +18,7 @@
 //= require ajaxupload
 //= require OpenLayers
 //= require cartodb.core
+//= require_tree ./modules
 //= require areas
 //= require_tree ./analysis/lib
 //= require_tree ./analysis/templates/
