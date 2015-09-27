@@ -28,7 +28,7 @@ window.Map = class Map
 
   addAttribution: ->
     attribution = L.control.attribution(position: 'bottomright', prefix: '')
-    attribution.addAttribution('Developed for the Abu Dhabi Blue Carbon Demonstration Project')
+    attribution.addAttribution('Developed for the UAE Blue Carbon Demonstration Project')
     attribution.addTo(@map)
 
   baseMaps: ->

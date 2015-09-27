@@ -6,7 +6,7 @@ Blue Carbon has been rewritten as [Blue Forest](https://github.com/unepwcmc/Blue
 
 ---
 
-EcoPlotter application to analyse the data collected about blue carbon in the Abu Dhabi coastline
+EcoPlotter application to analyse the data collected about blue carbon in the UAE coastline
 
 ## Development Setup
 You'll need to install the postgis extensions in the database before it will migrate, if your setup is like mine, you can do this by adding the postgis template to the database.yml:
