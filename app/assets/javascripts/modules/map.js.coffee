@@ -6,8 +6,9 @@ window.Map = class Map
     algal_mat: '#ffe048'
     other: '#1dcbea'
   DEFAULT_MAP_OPTS =
-    center: [24.5, 54]
-    zoom: 9
+    attributionControl: false
+    center: [25, 53]
+    zoom: 8
     minZoom: 8
     maxZoom: 19
 
