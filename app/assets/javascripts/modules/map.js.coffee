@@ -14,7 +14,7 @@ window.Map = class Map
 
   constructor: (elementId, mapOpts={}) ->
     @baseMap = L.tileLayer('http://tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {maxZoom: 17})
-    @baseSatellite =  new L.BingLayer("ApZALeudlU-OTm7Me2qekFHrstBXNdv3hft6qy3ZeTQWD6a460-QqCQyYnDigINc", {type: "Aerial", maxZoom: 19})
+    @baseSatellite =  new L.tileLayer("https://api.mapbox.com/v4/unepwcmc.d8952968/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoidW5lcHdjbWMiLCJhIjoiRXg1RERWRSJ9.taTsSWwtAfFX_HMVGo2Cug")
 
     @initializeMap(elementId, mapOpts)
     @addAttribution()
@@ -30,6 +30,9 @@ window.Map = class Map
   addAttribution: ->
     attribution = L.control.attribution(position: 'bottomright', prefix: '')
     attribution.addAttribution('Developed for the UAE Blue Carbon Demonstration Project')
+    attribution.addTo(@map)
+    attribution = L.control.attribution(position: 'bottomright', prefix: '')
+    attribution.addAttribution("© <a href='https://www.mapbox.com/map-feedback/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>")
     attribution.addTo(@map)
 
   baseMaps: ->
