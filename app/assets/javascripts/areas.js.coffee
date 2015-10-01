@@ -5,7 +5,7 @@
 $ ->
   if $('#map').length > 0
     map = new Map('map')
-    addDraw(map)
+    addDraw(map.map)
 
 addDraw = (map) ->
   drawnItems = new L.LayerGroup()
@@ -20,7 +20,6 @@ addDraw = (map) ->
   map.addLayer(drawnItems)
 
 editableMap = (map, drawnItems) ->
-  @map = map
   @drawControl = new L.Control.Draw
     polyline: false
     circle: false
