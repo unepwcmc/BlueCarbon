@@ -1,13 +1,13 @@
 window.Map = class Map
   HABITATS =
-    mangrove: '#008b00'
-    seagrass: '#9b1dea'
+    mangrove: '#d21010'
+    seagrass: '#d00eeb'
     saltmarsh: '#007dff'
     algal_mat: '#ffe048'
     other: '#1dcbea'
   DEFAULT_MAP_OPTS =
     attributionControl: false
-    center: [25, 53]
+    center: [25, 53.7]
     zoom: 8
     minZoom: 8
     maxZoom: 19
@@ -61,7 +61,7 @@ window.Map = class Map
           line-color: #FFF;
           line-width: 0.5;
           polygon-fill: #{polygon_fill};
-          polygon-opacity: 0.4
+          polygon-opacity: 0.6
         }
       """
 
