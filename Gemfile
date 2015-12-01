@@ -12,7 +12,7 @@ gem 'cancan'
 gem 'rails-backbone', '~> 1.2.0'
 
 gem 'daemons'
-gem 'delayed_job_active_record'
+gem 'sidekiq', '~> 4.0.1'
 
 gem 'rvm-capistrano'
 gem 'rabl'
