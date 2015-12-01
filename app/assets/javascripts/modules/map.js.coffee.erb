@@ -55,9 +55,11 @@ window.Map = class Map
 
   getSublayers: ->
     _.map(HABITATS, (polygon_fill, habitat) ->
-      query = "SELECT * FROM bc_#{habitat} WHERE toggle = true AND (action <> 'delete' OR action IS NULL)"
+      tableName = "bc_#{habitat}<%= "_#{Rails.env}" unless Rails.env.production? %>"
+
+      query = "SELECT * FROM #{tableName} WHERE toggle = true AND (action <> 'delete' OR action IS NULL)"
       style = """
-        #bc_#{habitat} {
+        ##{tableName} {
           line-color: #FFF;
           line-width: 0.5;
           polygon-fill: #{polygon_fill};
