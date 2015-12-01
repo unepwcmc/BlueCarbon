@@ -21,7 +21,7 @@ gem 'httparty', '~> 0.13.7'
 
 gem 'activerecord-postgis-adapter', '0.4.1'
 
-gem 'paperclip', '~> 3.5.0'
+gem 'paperclip', '~> 4.2.2'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
