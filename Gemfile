@@ -9,7 +9,7 @@ gem 'devise'
 gem 'rack-cors', :require => 'rack/cors'
 gem 'cancan'
 
-gem 'rails-backbone'
+gem 'rails-backbone', '~> 1.2.0'
 
 gem 'daemons'
 gem 'delayed_job_active_record'
@@ -36,7 +36,7 @@ end
 
 gem "susy"
 
-gem 'jquery-rails'
+gem 'jquery-rails', '~> 3.1.3'
 
 gem 'libv8', '~> 3.11.8'
 
