@@ -55,3 +55,8 @@ group :development do
   gem 'rb-inotify', '~> 0.8.8', :require => RUBY_PLATFORM.include?('linux') && 'rb-inotify'
   gem 'rb-fsevent', '~> 0.9.1', :require => RUBY_PLATFORM.include?('darwin') && 'rb-fsevent'
 end
+
+group :production, :staging do
+  gem 'exception_notification', '~> 4.1.1'
+  gem 'slack-notifier', '~> 1.4.0'
+end

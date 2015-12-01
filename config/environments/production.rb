@@ -20,6 +20,16 @@ BlueCarbon::Application.configure do
   # Generate digests for assets URLs
   config.assets.digest = true
 
+  Rails.application.config.middleware.use(ExceptionNotification::Rack,
+    slack: {
+      webhook_url: ENV["SLACK_NOTIFIER_WEBHOOK_URL"],
+      channel: ENV["SLACK_NOTIFIER_CHANNEL"],
+      additional_parameters: {
+        mrkdwn: true
+      }
+    }
+  )
+
   # Defaults to nil and saved in location specified by config.assets.prefix
   # config.assets.manifest = YOUR_PATH
 
