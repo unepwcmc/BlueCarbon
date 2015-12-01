@@ -5,7 +5,7 @@ gem 'rails', '3.2.22'
 gem 'pg', '~> 0.18.4'
 gem 'bootstrap-generators', '~> 2.1', :git => 'git://github.com/decioferreira/bootstrap-generators.git'
 gem 'simple_form'
-gem 'devise'
+gem 'devise', '~> 3.0.1'
 gem 'rack-cors', :require => 'rack/cors'
 gem 'cancan'
 
