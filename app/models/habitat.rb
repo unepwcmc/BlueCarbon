@@ -20,11 +20,9 @@ class Habitat
   end
 
   def table_name
-    table_str = "bc_#{name}"
-    unless Rails.env == "production"
-      table_str += "_#{Rails.env}"
-    end
-    table_str
+    "bc_#{name}".tap { |str|
+      str << "_#{Rails.env}" if Rails.env != "production"
+    }
   end
 
   # Returns a link to CartoDB to retrieve a shapefile download of the
@@ -36,7 +34,6 @@ class Habitat
 
     query = generate_shapefile_export_query("bc_#{table_name}")
     query.gsub!("\n","")
-    puts query
     "http://carbon-tool.cartodb.com/api/v2/sql?q=#{URI.encode(query)}&format=shp&api_key=#{api_key}"
   end
 

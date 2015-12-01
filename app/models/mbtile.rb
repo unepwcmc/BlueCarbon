@@ -79,7 +79,6 @@ class Mbtile < ActiveRecord::Base
 
     "#{layers_path}/polygons.kml".tap do |path|
       File.open(path, "w") do |f|
-        p cartodb_query
         f.write(open(cartodb_query).read)
       end
     end

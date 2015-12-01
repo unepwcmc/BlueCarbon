@@ -1,5 +1,7 @@
 class ValidationsController < AdminController
   before_filter :authenticate_admin!
+  before_filter :load_photos, only: :create
+
   load_and_authorize_resource
 
   # GET /validations
@@ -12,7 +14,7 @@ class ValidationsController < AdminController
       @validations = current_admin.validations
     end
     @areas = Area.all
-    
+
     @photo = Photo.new
 
     respond_to do |format|
@@ -97,10 +99,16 @@ class ValidationsController < AdminController
 
   def export
     url = Habitat.shapefile_export_url(params[:habitat])
-    puts url 
+    puts url
     data = open(url).read
     habitat_name = params[:habitat]
     filename = "BlueCarbon_#{habitat_name}_Download.zip"
     send_data data, :filename => filename
+  end
+
+  private
+
+  def load_photos
+    params[:validation][:photos] ||= []
   end
 end

@@ -1,6 +1,6 @@
 class Validation < ActiveRecord::Base
   attr_accessible :coordinates, :action, :habitat, :area_id, :knowledge,
-    :density, :condition, :age, :species, :recorded_at, :notes, :photo_ids
+    :density, :condition, :age, :species, :recorded_at, :notes, :photo_ids, :photos
   attr_accessor :photo_ids
 
   serialize :coordinates
