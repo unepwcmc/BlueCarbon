@@ -26,7 +26,7 @@ class Validation < ActiveRecord::Base
   after_update :cartodb_update
 
   after_save do
-    Mbtile.delay.generate(area_id, habitat) if area_id
+    MbtileGenerator.perform_async(area_id, habitat) if area_id
 
     # Reset associated photos
     unless photo_ids.nil?
@@ -81,10 +81,7 @@ class Validation < ActiveRecord::Base
   end
 
   def cartodb_query(sql)
-  sql.gsub!("\n","")
-  CartoDB::Connection.query("BEGIN; #{sql} COMMIT;")
-  rescue CartoDB::Client::Error => e
-    errors.add :base, 'There was an error trying to render the layers.'
-    logger.info "There was an error trying to execute the following query:\n#{sql}\nError details: #{e.inspect}"
+    sql.gsub!("\n","")
+    CartoDb.query(sql)
   end
 end
