@@ -102,6 +102,9 @@ GEM
     haml (3.1.7)
     highline (1.6.15)
     hike (1.2.1)
+    httparty (0.13.7)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
     i18n (0.6.1)
     journey (1.0.4)
     jquery-rails (2.1.4)
@@ -118,6 +121,7 @@ GEM
     method_source (0.8.1)
     mime-types (1.21)
     multi_json (1.7.1)
+    multi_xml (0.5.5)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-sftp (2.0.5)
@@ -252,6 +256,7 @@ DEPENDENCIES
   delayed_job_web
   devise
   guard-rspec
+  httparty (~> 0.13.7)
   jquery-rails
   libv8 (~> 3.11.8)
   paperclip (~> 3.0)

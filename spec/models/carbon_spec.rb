@@ -4,12 +4,15 @@ require_relative '../../lib/carbon_query'
 describe CarbonQuery do
   describe '.query' do
     before(:all) do
-      add_spatial_ref_sys = system("psql -U postgres -d bluecarbon_test -a -f /home/miguelt/postgis/postgis-2.0.2SVN/extensions/postgis/sql_bits/spatial_ref_sys.sql")
+      ActiveRecord::Base.connection.execute(%q(
+        INSERT into spatial_ref_sys (srid, auth_name, auth_srid, proj4text, srtext)
+        values ( 94326, 'epsg', 4326, '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs ', 'GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]')
+      ))
     end
     describe 'when there is one geometry that intersect' do
       before(:each) do
-         puts add_query = "INSERT INTO carbon_view (c_mg_ha, area_ha, habitat, the_geom) VALUES (1, 
-          ST_Area(ST_Transform(ST_SetSRID(ST_GeomFromText('MULTIPOLYGON(((0 0, 2 0, 2 2, 0 2, 0 0)))'), 4326),27040))/10000, 
+         puts add_query = "INSERT INTO carbon_view (c_mg_ha, area_ha, habitat, the_geom) VALUES (1,
+          ST_Area(ST_Transform(ST_SetSRID(ST_GeomFromText('MULTIPOLYGON(((0 0, 2 0, 2 2, 0 2, 0 0)))'), 4326),27040))/10000,
           'Algalmat',
           ST_GeomFromText('MULTIPOLYGON(((0 0, 2 0, 2 2, 0 2, 0 0)))', 4326));"
         @query1 = "SELECT c_mg_ha*area_ha as carbon FROM carbon_view"
@@ -27,7 +30,7 @@ describe CarbonQuery do
   describe 'when there is one geometry that does not intersect' do
       before(:each) do
         #add_spatial_ref_sys = system("psql -U postgres -d bluecarbon_test -a -f /home/miguelt/postgis/postgis-2.0.2SVN/extensions/postgis/sql_bits/spatial_ref_sys.sql")
-        add_query = "INSERT INTO carbon_view (c_mg_ha, area_ha, habitat, the_geom) VALUES (1, 
+        add_query = "INSERT INTO carbon_view (c_mg_ha, area_ha, habitat, the_geom) VALUES (1,
          ST_Area(ST_Transform(ST_SetSRID(ST_GeomFromText('MULTIPOLYGON(((0 0, 2 0, 2 2, 0 2, 0 0)))'), 4326),27040))/10000,
           'Algalmat',
           ST_GeomFromText('MULTIPOLYGON(((0 0, 2 0, 2 2, 0 2, 0 0)))', 4326));"
@@ -44,7 +47,7 @@ describe CarbonQuery do
   describe 'when there is a geometry that completely overlaps' do
       before(:each) do
         #add_spatial_ref_sys = system("psql -U postgres -d bluecarbon_test -a -f /home/miguelt/postgis/postgis-2.0.2SVN/extensions/postgis/sql_bits/spatial_ref_sys.sql")
-        add_query = "INSERT INTO carbon_view (c_mg_ha, area_ha, habitat, the_geom) VALUES (3, 
+        add_query = "INSERT INTO carbon_view (c_mg_ha, area_ha, habitat, the_geom) VALUES (3,
          ST_Area(ST_Transform(ST_SetSRID(ST_GeomFromText('MULTIPOLYGON(((0 0, 2 0, 2 2, 0 2, 0 0)))'), 4326),27040))/10000,
           'Algalmat',
           ST_GeomFromText('MULTIPOLYGON(((0 0, 2 0, 2 2, 0 2, 0 0)))', 4326));"
@@ -63,11 +66,11 @@ describe CarbonQuery do
     describe 'when there is a geometry that intersects 2 geometries' do
       before(:each) do
         #add_spatial_ref_sys = system("psql -U postgres -d bluecarbon_test -a -f /home/miguelt/postgis/postgis-2.0.2SVN/extensions/postgis/sql_bits/spatial_ref_sys.sql")
-        add_query = "INSERT INTO carbon_view (c_mg_ha, area_ha, habitat, the_geom) VALUES (3, 
+        add_query = "INSERT INTO carbon_view (c_mg_ha, area_ha, habitat, the_geom) VALUES (3,
          ST_Area(ST_Transform(ST_SetSRID(ST_GeomFromText('MULTIPOLYGON(((0 0, 2 0, 2 2, 0 2, 0 0)))'), 4326),27040))/10000,
           'Algalmat',
           ST_GeomFromText('MULTIPOLYGON(((0 0, 2 0, 2 2, 0 2, 0 0)))', 4326));"
-        add_query2 = "INSERT INTO carbon_view (c_mg_ha, area_ha, habitat, the_geom) VALUES (3, 
+        add_query2 = "INSERT INTO carbon_view (c_mg_ha, area_ha, habitat, the_geom) VALUES (3,
          ST_Area(ST_Transform(ST_SetSRID(ST_GeomFromText('MULTIPOLYGON(((3 3, 5 3, 5 5, 3 5, 3 3)))'), 4326),27040))/10000,
           'Algalmat',
           ST_GeomFromText('MULTIPOLYGON(((0 0, 2 0, 2 2, 0 2, 0 0)))', 4326));"
@@ -87,11 +90,11 @@ describe CarbonQuery do
     describe 'when there is a geometry that intersects 2 geometries using habitats query' do
       before(:each) do
         #add_spatial_ref_sys = system("psql -U postgres -d bluecarbon_test -a -f /home/miguelt/postgis/postgis-2.0.2SVN/extensions/postgis/sql_bits/spatial_ref_sys.sql")
-        add_query = "INSERT INTO carbon_view (c_mg_ha, area_ha, habitat, the_geom) VALUES (3, 
+        add_query = "INSERT INTO carbon_view (c_mg_ha, area_ha, habitat, the_geom) VALUES (3,
          ST_Area(ST_Transform(ST_SetSRID(ST_GeomFromText('MULTIPOLYGON(((0 0, 2 0, 2 2, 0 2, 0 0)))'), 4326),27040))/10000,
           'Algalmat',
           ST_GeomFromText('MULTIPOLYGON(((0 0, 2 0, 2 2, 0 2, 0 0)))', 4326));"
-        add_query2 = "INSERT INTO carbon_view (c_mg_ha, area_ha, habitat, the_geom) VALUES (3, 
+        add_query2 = "INSERT INTO carbon_view (c_mg_ha, area_ha, habitat, the_geom) VALUES (3,
          ST_Area(ST_Transform(ST_SetSRID(ST_GeomFromText('MULTIPOLYGON(((3 3, 5 3, 5 5, 3 5, 3 3)))'), 4326),27040))/10000,
           'Seagrass',
           ST_GeomFromText('MULTIPOLYGON(((0 0, 2 0, 2 2, 0 2, 0 0)))', 4326));"
@@ -106,10 +109,6 @@ describe CarbonQuery do
         result = ActiveRecord::Base.connection.select_one("SELECT SUM(c_mg_ha*area_ha) as carbon FROM carbon_view")
         Float(check["carbon"]) < Float(result["carbon"])
       end
-
-
     end
-
-
   end
 end

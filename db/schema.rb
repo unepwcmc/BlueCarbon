@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140203160641) do
+ActiveRecord::Schema.define(:version => 20151201103513) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                  :default => "", :null => false
@@ -73,13 +73,16 @@ ActiveRecord::Schema.define(:version => 20140203160641) do
     t.text    "notes"
     t.string  "author"
     t.boolean "display"
-    t.integer "phase",      :limit => 8
-    t.integer "phase_id",   :limit => 8
-    t.integer "prev_phase", :limit => 8
-    t.integer "edit_phase", :limit => 8
+    t.integer "phase",                :limit => 8
+    t.integer "phase_id",             :limit => 8
+    t.integer "prev_phase",           :limit => 8
+    t.integer "edit_phase",           :limit => 8
     t.boolean "toggle"
     t.float   "value"
-    t.spatial "the_geom",   :limit => {:srid=>0, :type=>"geometry"}
+    t.spatial "the_geom",             :limit => {:srid=>0, :type=>"geometry"}
+    t.string  "condition"
+    t.string  "habitat"
+    t.string  "the_geom_webmercator"
   end
 
   create_table "mbtiles", :force => true do |t|

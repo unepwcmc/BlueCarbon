@@ -17,6 +17,7 @@ gem 'delayed_job_web'
 
 gem 'rvm-capistrano'
 gem 'rabl'
+gem 'httparty', '~> 0.13.7'
 
 gem 'activerecord-postgis-adapter', '0.4.1'
 
