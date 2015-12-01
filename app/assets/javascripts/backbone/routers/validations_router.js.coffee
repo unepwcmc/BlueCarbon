@@ -31,7 +31,7 @@ class BlueCarbon.Routers.ValidationsRouter extends Backbone.Router
       @initializeMap args
 
     # Upload photo
-    new AjaxUpload 'upload-photo'
+    new AjaxUpload 'upload-photo',
       action: '/photos'
       name: 'photo[attachment]'
       data:
@@ -98,7 +98,7 @@ class BlueCarbon.Routers.ValidationsRouter extends Backbone.Router
     @initializeMap args
 
     # Upload photo
-    new AjaxUpload 'upload-photo'
+    new AjaxUpload 'upload-photo',
       action: '/photos'
       name: 'photo[attachment]'
       data:

@@ -39,7 +39,7 @@ body {
   }
 
   h3 {
-    border-bottom: 1px solid black; 
+    border-bottom: 1px solid black;
   }
 
   p {
@@ -127,8 +127,8 @@ body.matted {
 
 .page {
   // Notice the title and footer sections are out of the 12 columns container
-  .content { 
-    @include container($total-columns, $break); 
+  .content {
+    @include container($total-columns);
     //@include susy-grid-background;
   }
 
@@ -138,12 +138,13 @@ body.matted {
       height: 13px;
       background-color: #fff;
     }
-    @include with-grid-settings(12,4em,1em,1em) {
-      .inner { 
+
+    @include with-grid-settings(12, 4em, 1em, 1em) {
+      .inner {
         @include container;
         //$container-style: magic;
-  
-        .banner { 
+
+        .banner {
           @include span-columns(5,12);
           font-size: 12pt;
           font-weight: normal;
@@ -155,11 +156,11 @@ body.matted {
           #tool {
             @include span-columns(2,$break);
           }
-          #help { 
+          #help {
             @include span-columns(2,$break);
           }
           #about { @include span-columns(2,$break); }
-          #language { 
+          #language {
             @include suffix(4);
             @include span-columns(2 omega,$break);
           }
@@ -168,8 +169,8 @@ body.matted {
           text-align: right;
           text-align: center;
         }
-  
-  
+
+
         height: 84px;
         position: relative;
         img {
@@ -231,7 +232,7 @@ body.matted {
   }
 
   .content {
-    
+
     @include at-breakpoint($break) {
       .left {
         @include span-columns(6,$break);
@@ -264,12 +265,12 @@ body.matted {
 
   // About page
   .content-full {
-    
+
     @include with-grid-settings(5,10.5em,1.5em,1em) {
       $total-columns-e: 3;
       $break-e:         5;
-      .inner-e { 
-        @include container($total-columns-e, $break-e); 
+      .inner-e {
+        @include container($total-columns-e, $break-e);
         //@include susy-grid-background;
       }
 
@@ -313,7 +314,7 @@ body.matted {
       }
     };
 
-    .inner { 
+    .inner {
       @include container($total-columns, $break);
       //@include susy-grid-background;
 
@@ -358,7 +359,7 @@ body.matted {
 			margin-top: -17px;
 			margin-bottom: 10px;
 		}
-		
+
     p.light-blue.doubble.ar {
       padding-bottom: 37px;
     }
@@ -375,22 +376,22 @@ body.matted {
 
   footer {
     @include with-grid-settings(12,4em,1em,1em) {
-      .inner { 
-        @include container; 
+      .inner {
+        @include container;
         //@include susy-grid-background;
       }
-      #attributions { 
-        @include span-columns(7,$break); 
+      #attributions {
+        @include span-columns(7,$break);
       }
-      #authentication { 
-        @include span-columns(3,$break); 
+      #authentication {
+        @include span-columns(3,$break);
         text-align: right;
         input[type=submit] {
           margin-right: 21px;
         }
       }
-      #contact { 
-        @include span-columns(2 omega,$break); 
+      #contact {
+        @include span-columns(2 omega,$break);
         text-align: right;
       }
       height: 150px;

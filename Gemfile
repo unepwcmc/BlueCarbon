@@ -13,7 +13,6 @@ gem 'rails-backbone', '~> 1.2.0'
 
 gem 'daemons'
 gem 'delayed_job_active_record'
-gem 'delayed_job_web'
 
 gem 'rvm-capistrano'
 gem 'rabl'
@@ -24,12 +23,14 @@ gem 'activerecord-postgis-adapter', '0.4.1'
 gem 'paperclip', '~> 4.2.2'
 
 group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
+  gem 'sass-rails',   '3.2.5'
   gem 'coffee-rails', '~> 3.2.1'
 
   gem 'uglifier', '~> 2.7.2'
 
-  gem 'compass', '>= 0.12.2'
+  gem 'sass', '3.3.0.alpha.149'
+  gem 'compass', '0.12.2'
+
   gem 'compass-rails', '>= 1.0.3'
   gem 'sassy-buttons'
 end
@@ -46,9 +47,9 @@ gem 'capistrano-ext'
 
 gem 'rspec-rails', '~> 2.0', :group => [:test, :development]
 gem 'database_cleaner', :group => :test
+gem 'test-unit', '~> 3.0', group: [:test, :development]
 
 group :development do
-  gem 'guard-rspec'
   gem 'rb-inotify', '~> 0.8.8', :require => RUBY_PLATFORM.include?('linux') && 'rb-inotify'
   gem 'rb-fsevent', '~> 0.9.1', :require => RUBY_PLATFORM.include?('darwin') && 'rb-fsevent'
 end
