@@ -1,23 +1,30 @@
-development:
-  adapter: postgis
-  database: bluecarbon_development
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  min_messages: WARNING
+
+  database: bluecarbon_<%= Rails.env %>
   pool: 5
-  username: postgres
-  password:
-  host: localhost
+
+  host: <%= ENV.fetch('DB_HOST') %>
+  username: <%= ENV.fetch('DB_USERNAME') %>
+  password: <%= ENV.fetch('DB_PASSWORD') %>
+
+
+development:
+  <<: *default
+  adapter: postgis
   template: template_postgis
 
 test:
+  <<: *default
   adapter: postgis
-  database: bluecarbon_test
-  host: localhost
-  pool: 5
-  username: postgres
-  password:
-  host: localhost
   template: template_postgis
 
+staging:
+  <<: *default
+  pool: 10
+
 production:
-  adapter: postgresql
-  database: bluecarbon_production
-  host: localhost
+  <<: *default
+  pool: 10

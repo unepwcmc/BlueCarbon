@@ -44,6 +44,7 @@ gem 'libv8', '~> 3.11.8'
 # Deploy with Capistrano
 gem 'capistrano'
 gem 'capistrano-ext'
+gem 'dotenv-rails'
 
 gem 'rspec-rails', '~> 2.0', :group => [:test, :development]
 gem 'database_cleaner', :group => :test
