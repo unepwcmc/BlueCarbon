@@ -12,7 +12,6 @@ describe CartodbQuery do
       @editing = OpenStruct.new(id: 1, admin_id: 1, age: 1234, area_id: 1, density: 1, knowledge: 'local_data', notes: 'test', id: @phase)
     end
 
-
     describe 'when there is one geometry' do
       before(:each) do
         add_query = "INSERT INTO geometries (the_geom, toggle, phase, prev_phase, edit_phase) VALUES (ST_GeomFromText('MULTIPOLYGON(((-12 -8, -8 -8, -8 -12, -12 -12, -12 -8)))', 4326), true, #{@phase}, #{@phase}, #{@phase});"
@@ -28,11 +27,7 @@ describe CartodbQuery do
         check = ActiveRecord::Base.connection.select_one("SELECT COUNT(1) AS count FROM geometries WHERE age = 1234;")
         Integer(check['count']).should ==(1)
       end
-
     end
-
-
-
 
     describe 'when there are two geometries that not intersect' do
       before(:each) do

@@ -1,7 +1,3 @@
-SELECT bc_sabkha.the_geom as id, c_mg_ha 
-FROM bc_sabkha LEFT JOIN carbon_values 
-ON bc_sabkha.habitat = carbon_values.habitat;
-
 UPDATE bc_sabkha SET area =
 ST_Area(
 ST_Transform(
@@ -54,7 +50,7 @@ UPDATE bc_algal_mat SET area_ha = area/10000;
 UPDATE bc_seagrass SET area_ha = area/10000;
 
 
-CREATE VIEW bc_carbon_view AS 
+CREATE VIEW bc_carbon_view AS
 
 SELECT a.the_geom, a.habitat, c_mg_ha FROM (
 
@@ -66,7 +62,7 @@ SELECT a.the_geom, a.habitat, c_mg_ha FROM (
    UNION ALL
 
     -- Saltmarsh edited values with density
-    
+
     SELECT sltm.the_geom, sltm.habitat, area_ha, phase, b.c_mg_ha, b.standard_value_habitat
         FROM bc_saltmarsh sltm
         LEFT JOIN carbon_values b
@@ -84,9 +80,9 @@ SELECT a.the_geom, a.habitat, c_mg_ha FROM (
   ) a
 
   UNION ALL
-  
+
   -- Mangrove, Saltmarsh and Seagrass previous polygons
-  
+
   SELECT mngr.the_geom, mngr.habitat, c_mg_ha
   FROM bc_mangrove mngr
   LEFT JOIN carbon_values b
@@ -112,8 +108,3 @@ SELECT a.the_geom, a.habitat, c_mg_ha FROM (
   LEFT JOIN carbon_values b
   ON (algm.habitat = b.habitat)
   WHERE toggle = true AND action <> 'delete'
-
-
-SELECT * FROM INFORMATION_SCHEMA.views
-
-http://carbon-tool.cartodb.com/api/v2/sql?format=shp
