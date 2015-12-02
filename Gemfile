@@ -42,8 +42,13 @@ gem 'jquery-rails', '~> 3.1.3'
 gem 'libv8', '~> 3.11.8'
 
 # Deploy with Capistrano
-gem 'capistrano'
-gem 'capistrano-ext'
+gem 'capistrano', '~> 3.4', require: false
+gem 'capistrano-rails',   '~> 1.1', require: false
+gem 'capistrano-bundler', '~> 1.1', require: false
+gem 'capistrano-rvm',   '~> 0.1', require: false
+gem 'capistrano-sidekiq'
+gem 'capistrano-passenger', '~> 0.1.1', require: false
+
 gem 'dotenv-rails'
 
 gem 'rspec-rails', '~> 2.0', :group => [:test, :development]

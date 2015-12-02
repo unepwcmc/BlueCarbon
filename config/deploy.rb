@@ -1,158 +1,57 @@
-require 'delayed/recipes'
+# config valid only for current version of Capistrano
+lock '3.4.0'
 
-set :stages, %w(production staging)
-set :default_stage, 'staging'
-require 'capistrano/ext/multistage'
+set :application, 'bluecarbon'
+set :repo_url, 'git@github.com:unepwcmc/BlueCarbon.git'
 
-set :application, "bluecarbon"
-set :repository,  "https://github.com/unepwcmc/BlueCarbon.git"
+# Default branch is :master
+# ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
-set(:deploy_to) { File.join("", "home", user, application) }
 
-set :user, "rails"
+set :branch, 'server-migration'
 
-set :scm, :git # You can set :scm explicitly or Capistrano will make an intelligent guess based on known version control directory names
-# Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
+set :deploy_user, 'wcmc'
 
-set :branch, "master"
+
+# Default deploy_to directory is /var/www/my_app_name
+set :deploy_to, "/home/#{fetch(:deploy_user)}/#{fetch(:application)}"
+
+# Default value for :scm is :git
+set :scm, :git
 set :scm_username, "unepwcmc-read"
-set :git_enable_submodules, 1
-default_run_options[:pty] = true # Must be set for the password prompt from git to work
 
-set :use_sudo, false
 
-# bundler bootstrap
-require 'bundler/capistrano'
+set :rvm_type, :user
+set :rvm_ruby_version, '2.2.3'
 
-# if you want to clean up old releases on each deploy uncomment this:
-after "deploy:restart", "deploy:cleanup"
 
-# if you're still using the script/reaper helper you will need
-# these http://github.com/rails/irs_process_scripts
 
-# If you are using Passenger mod_rails uncomment this:
-namespace :deploy do
-  task :start do ; end
-  task :stop do ; end
-  task :restart, :roles => :app, :except => { :no_release => true } do
-    run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
-  end
-end
+set :ssh_options, {
+  forward_agent: true,
+}
 
-# Database
 
-namespace :database do
-  desc "Generate a database configuration file"
-  task :build_configuration do
-    database_name = Capistrano::CLI.ui.ask("Database name: ")
-    database_user = Capistrano::CLI.ui.ask("Database username: ")
-    the_host = Capistrano::CLI.ui.ask("Database IP address: ")
-    pg_password = Capistrano::CLI.password_prompt("Database user password: ")
+# Default value for :format is :pretty
+# set :format, :pretty
 
-    db_options = {
-      "adapter" => "postgresql",
-      "database" => database_name,
-      "username" => database_user,
-      "host" => the_host,
-      "password" => pg_password
-    }
+# Default value for :log_level is :debug
+#set :log_level, :debug
 
-    config_options = db_options.to_yaml
-    run "mkdir -p #{shared_path}/config"
-    put config_options, "#{shared_path}/config/database.yml"
-  end
+# Default value for :pty is false
+set :pty, true
 
-  desc "Links the configuration file"
-  task :link_configuration_file do
-    run "ln -nsf #{shared_path}/config/database.yml #{latest_release}/config/database.yml"
-  end
-end
+# Default value for :linked_files is []
 
-after "deploy:setup", "database:build_configuration"
-after "deploy:finalize_update", "database:link_configuration_file"
+set :linked_files, %w{config/database.yml config/config.yml .env}
 
-# CartoDB
+# Default value for linked_dirs is []
+set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system','lib/tilemill')
 
-namespace :cartodb do
-  desc "Generate a cartodb configuration file"
-  task :build_configuration do
-    host = Capistrano::CLI.ui.ask("CartoDB host: ")
-    oauth_key = Capistrano::CLI.ui.ask("CartoDB key: ")
-    oauth_secret = Capistrano::CLI.ui.ask("CartoDB secret: ")
-    username = Capistrano::CLI.ui.ask("CartoDB username: ")
-    password = Capistrano::CLI.password_prompt("CartoDB password: ")
 
-    cartodb_options = {
-      "host" => host,
-      "oauth_key" => oauth_key,
-      "oauth_secret" => oauth_secret,
-      "username" => username,
-      "password" => password
-    }
+# Default value for default_env is {}
+# set :default_env, { path: "/opt/ruby/bin:$PATH" }
 
-    config_options = {"production" => cartodb_options}.to_yaml
-    run "mkdir -p #{shared_path}/config"
-    put config_options, "#{shared_path}/config/cartodb_config.yml"
-  end
+# Default value for keep_releases is 5
+set :keep_releases, 5
 
-  desc "Links the configuration file"
-  task :link_configuration_file do
-    run "ln -nsf #{shared_path}/config/cartodb_config.yml #{latest_release}/config/cartodb_config.yml"
-  end
-end
-
-after "deploy:setup", "cartodb:build_configuration"
-after "deploy:finalize_update", "cartodb:link_configuration_file"
-
-# Email
-
-#namespace :mail do
-#  desc 'Generate setup_mail.rb file'
-#  task :setup do
-#    address = Capistrano::CLI.ui.ask("Enter the smtp mail address: ")
-#    password = Capistrano::CLI.ui.ask("Enter the smtp user password: ")
-
-#    template = File.read("config/deploy/templates/setup_mail.rb.erb")
-#    buffer = ERB.new(template).result(binding)
-
-#    put(buffer, "#{shared_path}/config/initializers/setup_mail.rb")
-#  end
-
-#  desc "Links the mail folder"
-#  task :link_folder do
-#    run "ln -s #{shared_path}/config/initializers/setup_mail.rb #{latest_release}/config/initializers/setup_mail.rb"
-#  end
-#end
-#after "deploy:setup", "mail:setup"
-#after "deploy:update_code", "mail:link_folder"
-
-# Tilemill
-
-set(:shared_tilemill_path) {"#{shared_path}/tilemill"}
-
-namespace :tilemill do
-  desc "Make a shared tilemill folder"
-  task :make_shared_folder, :roles => :app do
-    run "mkdir -p #{shared_tilemill_path}"
-  end
-
-  desc "Links the tilemill folder"
-  task :link_folder, :roles => :db do
-    run "ln -s #{shared_tilemill_path} #{latest_release}/lib/tilemill"
-  end
-end
-
-after "deploy:setup", "tilemill:make_shared_folder"
-after "deploy:update_code", "tilemill:link_folder"
-
-# Delayed_job
-
-after "deploy:stop",    "delayed_job:stop"
-after "deploy:start",   "delayed_job:start"
-after "deploy:restart", "delayed_job:restart"
-
-# If you want to use command line options, for example to start multiple workers,
-# define a Capistrano variable delayed_job_args:
-#
-#   set :delayed_job_args, "-n 2"
-
+set :passenger_restart_with_touch, false

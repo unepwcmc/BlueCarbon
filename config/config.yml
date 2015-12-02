@@ -7,17 +7,17 @@ default: &default
 
 development:
   <<: *default
-  projectmill_path: '$HOME/Projects/ecoplotter/projectmill'
+  projectmill_path: '$HOME/dependencies/projectmill'
 
 test:
   <<: *default
-  projectmill_path: '$HOME/Projects/ecoplotter/projectmill'
+  projectmill_path: '$HOME/dependencies/projectmill'
 
 staging:
   <<: *default
-  projectmill_path: '$HOME/mapbox/projectmill'
+  projectmill_path: '$HOME/dependencies/projectmill'
 
 
 production:
   <<: *default
-  projectmill_path: '$HOME/mapbox/projectmill'
+  projectmill_path: '$HOME/dependencies/projectmill'
