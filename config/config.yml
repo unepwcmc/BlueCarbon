@@ -1,6 +1,9 @@
 default: &default
   tilemill_path: '/usr/share/tilemill'
   redis_url: <%= ENV["REDIS_URL"] %>
+  carto_db:
+    username: <%= ENV["CARTODB_USERNAME"] %>
+    api_key: <%= ENV["CARTODB_API_KEY"] %>
 
 development:
   <<: *default
