@@ -53,7 +53,7 @@ gem 'dotenv-rails'
 
 gem 'rspec-rails', '~> 2.0', :group => [:test, :development]
 gem 'database_cleaner', :group => :test
-gem 'test-unit', '~> 3.0', group: [:test, :development]
+gem 'test-unit', '~> 3.0'
 gem 'byebug', '~> 8.2.1', group: [:test, :development]
 
 group :development do
