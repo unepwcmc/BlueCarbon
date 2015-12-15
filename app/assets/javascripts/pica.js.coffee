@@ -80,7 +80,7 @@ class Pica.Model extends Pica.Events
         data: data
       )
     )
-  
+
   # Parse the data that is returned from the server.
   parse: (data) ->
     for attr, val of data
@@ -96,7 +96,7 @@ class Pica.Model extends Pica.Events
     sync = @sync(options)
     #sync.done => console.log("saving #{@constructor.name} #{@get('id')}")
     sync
-    
+
 
   fetch: (options = {}) =>
     options.url = if @url().read? then @url().read else @url()
@@ -142,8 +142,8 @@ class Pica.Application extends Pica.Events
     # to pica, then show Tile Layers by default.
     if @config.delegateLayerControl then @showTileLayers()
 
-  newWorkspace: ->
-    @currentWorkspace = new Pica.Models.Workspace(@)
+  newWorkspace: (options) ->
+    @currentWorkspace = new Pica.Models.Workspace(@, options)
 
   showTileLayers: ->
     new Pica.Views.ShowLayersView(app:@)
@@ -175,11 +175,13 @@ class Pica.Application extends Pica.Events
       @trigger('syncFinished')
 
 class Pica.Models.Area extends Pica.Model
-  constructor: (@app) ->
+  constructor: (@app, defaults={}) ->
     @throwIfNoApp()
     @polygons = []
 
-    @set('name', 'My Lovely Area')
+    defaults = $.extend(defaults, {'name': 'My Lovely Area'})
+    for property, value of defaults
+      @set(property, value)
 
   setName: (name) ->
     @set('name', name)
@@ -370,18 +372,20 @@ class Pica.Models.Polygon extends Pica.Model
       )
 
 class Pica.Models.Workspace extends Pica.Model
-  constructor: (@app, options) ->
+  constructor: (@app, @areasDefaults) ->
     @throwIfNoApp()
     @attributes = {}
     @areas = []
 
-    @currentArea = new Pica.Models.Area(@app)
+    @currentArea = new Pica.Models.Area(@app, @areasDefaults)
     @addArea(@currentArea)
 
   url: () ->
     "#{Pica.config.magpieUrl}/workspaces.json"
 
   addArea: (area) ->
+    unless area?
+      area = new Pica.Models.Area(@app, @areasDefaults)
     area.on('requestWorkspaceId', (options) =>
       if @get('id')?
         options.success(@)
@@ -389,6 +393,8 @@ class Pica.Models.Workspace extends Pica.Model
         @save(options)
     )
     @areas.push(area)
+
+    area
 
   removeArea: (theArea) ->
     id = @areas.indexOf(theArea)
@@ -541,7 +547,7 @@ class Pica.Views.ShowLayersView
 
   # For every layer in @app.layers,
   # we build a @tileLayers object, compatible with the arguments to
-  # L.control.layers, and, if we are not delegating the Layer Control 
+  # L.control.layers, and, if we are not delegating the Layer Control
   # functionality to Pica, we simply add every layer to the map in order.
   render: =>
     @removeTileLayers()
@@ -555,7 +561,7 @@ class Pica.Views.ShowLayersView
       @layerControl = @renderLayerControl @app.config.map
 
   # If we are delegating the Layer Control functionality to Pica:
-  # first we merge optional extra overlays from the config into 
+  # first we merge optional extra overlays from the config into
   # @tileLayers and then we show the first layer in the Layer Control.
   renderLayerControl: (map) ->
     extraOverlays = @app.config.extraOverlays or {}
@@ -567,7 +573,7 @@ class Pica.Views.ShowLayersView
     for name, layer of layers
       layer.addTo map
       return
- 
+
   removeTileLayers: =>
     for name, tileLayer of @tileLayers
       @app.map.removeLayer(tileLayer)

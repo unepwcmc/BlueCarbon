@@ -8,7 +8,7 @@ initializePica = (map) ->
     map: map
   )
 
-  window.pica.newWorkspace()
+  window.pica.newWorkspace(properties: {country_iso: 'AE'})
 
   window.router = new Backbone.Routers.AnalysisRouter()
   Backbone.history.start()
