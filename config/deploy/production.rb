@@ -1,3 +1,15 @@
+set :stage, :production
+
+server "web-production.linode.unep-wcmc.org", user: 'wcmc', roles: %w{app web db}
+server "db-production.linode.unep-wcmc.org", user: 'wcmc', roles: %w{bkp}, no_release: true
+
+set :application, "bluecarbon"
+set :server_name, "bluecarbon.web-production.linode.unep-wcmc.org"
+set :sudo_user, "wcmc"
+set :app_port, "80"
+
+
+
 # server-based syntax
 # ======================
 # Defines a single server with a list of roles and multiple properties.
