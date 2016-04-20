@@ -290,7 +290,7 @@ $corporate-green: #6dad67;
       &.title {
         font-weight:bold;
         font-size: 13px;
-        padding:0; 
+        padding:0;
         margin:0;
         text-align: left;
       }
@@ -417,4 +417,10 @@ $corporate-green: #6dad67;
 .style-rtl, th.rtl, td.rtl {
   direction: rtl;
   text-align: right;
+}
+
+.legend-block {
+  width: 12px;
+  height: 12px;
+  display:inline-block;
 }

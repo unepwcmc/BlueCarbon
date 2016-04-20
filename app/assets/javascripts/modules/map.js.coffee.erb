@@ -19,7 +19,7 @@ window.Map = class Map
     @initializeMap(elementId, mapOpts)
     @addAttribution()
     @addOverlays( (err, overlays) =>
-      L.control.layers(@baseMaps, overlays).addTo(@map)
+      L.control.layers(@baseMaps, overlays, {collapsed: false}).addTo(@map)
     )
 
   initializeMap: (elementId, mapOpts) ->
@@ -48,10 +48,10 @@ window.Map = class Map
         user_name: "carbon-tool"
       }, (tiles, error) =>
         prettyName = polyglot.t("analysis.#{sublayer.habitat}")
-        sublayers[prettyName] = L.tileLayer(tiles.tiles[0]).addTo(@map)
+        sublayers[@makeLegend(sublayer.habitat, prettyName)] = L.tileLayer(tiles.tiles[0]).addTo(@map)
         cb(null, sublayers)
       )
-    )
+    , done)
 
   getSublayers: ->
     _.map(HABITATS, (polygon_fill, habitat) ->
@@ -69,3 +69,9 @@ window.Map = class Map
 
       {habitat: habitat, cartodb: {sql: query, cartocss: style}}
     )
+
+  makeLegend: (name, prettyName) ->
+    """
+      <span class="legend-block" style="background-color: #{HABITATS[name]}"></span>
+      <span>#{prettyName}</span>
+    """
