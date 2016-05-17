@@ -3,9 +3,7 @@ class SessionsController < Devise::SessionsController
     respond_to do |format|
       format.html { super }
       format.json {
-        build_resource
         admin = Admin.find_for_database_authentication(email: params[:admin][:email])
-        return invalid_login_attempt unless resource
 
         if admin.valid_password?(params[:admin][:password])
           render json: { auth_token: admin.authentication_token }, success: true, status: :created
