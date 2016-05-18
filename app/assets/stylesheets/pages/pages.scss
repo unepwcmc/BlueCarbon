@@ -128,7 +128,14 @@ body.matted {
 .page {
   // Notice the title and footer sections are out of the 12 columns container
   .content {
-    @include container($total-columns);
+    overflow: auto;
+    width: 70%;
+    max-width: 1280px;
+    min-width: 900px;
+    padding-left: 1em;
+    padding-right: 1em;
+    margin-left: auto;
+    margin-right: auto;
     //@include susy-grid-background;
   }
 
