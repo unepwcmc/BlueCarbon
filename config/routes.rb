@@ -14,11 +14,12 @@ BlueCarbon::Application.routes.draw do
     resources :mbtiles, only: :show
   end
 
-  match '/:locale' => 'pages#home'
   scope "(:locale)", :locale => /en|ar/ do
     match 'home' => 'pages#home'
     match 'about' => 'pages#about'
     match 'help' => 'pages#help'
     match "layout" => 'analysis#index'
   end
+
+  match '/:locale' => 'pages#home'
 end

@@ -1,5 +1,5 @@
 class PagesController < ApplicationController
-  before_filter :set_locale
+  before_filter :check_locale, :set_locale
   layout 'pages'
 
   def about
@@ -24,8 +24,13 @@ class PagesController < ApplicationController
     I18n.locale = params[:locale] || I18n.default_locale
   end
 
+  def check_locale
+    unless ["ar", "en"].include?(params[:locale])
+      redirect_to locale: "en"
+    end
+  end
+
   def default_url_options(options={})
-    logger.debug "default_url_options is passed options: #{options.inspect}\n"
     { :locale => I18n.locale }
   end
 end
