@@ -389,6 +389,17 @@ body.matted {
       }
       #attributions {
         @include span-columns(7,$break);
+
+        a {
+          margin-right: 1rem;
+
+        }
+
+        .wcmc-logo {
+          width: 125px;
+          padding-bottom: 16px;
+          display: inline-block;
+        }
       }
       #authentication {
         @include span-columns(3,$break);
